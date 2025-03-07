@@ -16,4 +16,5 @@ Webアプリは、html/javaScript/css等で開発します。作成したファ�
 
 
 ＊「WebServer with StackChan（WWS）」の開発は終了し、このソフトに引き継ぎました。 
+
 (2025-03-08 by NoRi)

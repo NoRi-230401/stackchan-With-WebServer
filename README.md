@@ -1,4 +1,7 @@
 # stackchan-With-WebServer
+
+*** 開発中 ***
+
 stackchan-With-WebSever（以下、"stackchanWWS"）は、M5Stackに非同期型のWebSeverを組み込み、ｽﾀｯｸﾁｬﾝの主な機能を「Web API」で提供します。
 これにより、ｽﾀｯｸﾁｬﾝのWebアプリが開発ができるようになりした。
 Webアプリは、html/javaScript/css等で開発します。作成したファイルはM5Stack本体のSPIFFS領域に設置し動作します。

@@ -151,13 +151,13 @@ File fileOpen(int flType, const String path, const char *mode)
   {
     FILE_PT = SPIFFS.open(path.c_str(), mode);
 
-    Serial.println("###  SPIFFS.open(" + path + "," + String(mode) + ")  ###");
+    Serial.println("* SPIFFS.open(" + path + "," + String(mode) + ") *");
     return FILE_PT;
   }
   else if (flType == FLTYPE_SD)
   {
     FILE_PT = SD_open(path.c_str(), mode);
-    Serial.println("###  SD.open(" + path + "," + String(mode) + ")  ###");
+    Serial.println("* SD.open(" + path + "," + String(mode) + ") *");
     return FILE_PT;
   }
 

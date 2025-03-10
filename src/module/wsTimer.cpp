@@ -10,20 +10,20 @@ bool TM_GO_GET = false;
 
 void timerManage()
 {
-  if (TM_STARTED && statusMode != STM_SYSINFO )
+  if (TM_STARTED && statusMode != STM_SYSINFO)
   { // Timer 起動中
     // if (SYSINFO_DISP_STATE)
     //   sysInfoDispEnd();
 
     uint32_t elapsedTimeMillis = millis() - TM_START_MILLIS;
-    uint16_t currentElapsedSeconds =(uint16_t)(elapsedTimeMillis / 1000);
+    uint16_t currentElapsedSeconds = (uint16_t)(elapsedTimeMillis / 1000);
 
     if (currentElapsedSeconds >= TM_SEC_VAL)
     { // 指定時間が経過したら終了
       timerEnd();
     }
 
-    else if (TM_STOP_GET )
+    else if (TM_STOP_GET)
     { // ---Timer停止---
       timerStop();
     }
@@ -74,19 +74,17 @@ void wsHandleTimer(String TmSecS, String TmMinS, String timerModeS)
     TM_STOP_GET = false;
     TM_GO_GET = false;
     webpage = "timer = " + String(TM_SEC_VAL, DEC) + "sec";
+    Serial.println(webpage);
+    return;
   }
 
   if (timerModeS != "")
   {
     timerModeS.toUpperCase();
-
     if (timerModeS == "START" || timerModeS == "GO")
     {
       if (!TM_STARTED && statusMode != STM_SYSINFO)
       {
-        // if (SYSINFO_DISP_STATE)
-        //   sysInfoDispEnd();
-
         randomSpeakStop2();
         TM_GO_GET = true;
         TM_STOP_GET = false;
@@ -96,8 +94,6 @@ void wsHandleTimer(String TmSecS, String TmMinS, String timerModeS)
       {
         webpage = "timer has already started";
       }
-      Serial.println(webpage);
-      return;
     }
     else if (timerModeS == "STOP")
     {
@@ -111,9 +107,26 @@ void wsHandleTimer(String TmSecS, String TmMinS, String timerModeS)
       {
         webpage = "timer has already stopped";
       }
-      Serial.println(webpage);
-      return;
     }
+    else if (timerModeS == "TOGGLE")
+    {
+      if (!TM_STARTED)
+      { // ---- Timer 開始 ------
+        randomSpeakStop2();
+        TM_GO_GET = true;
+        TM_STOP_GET = false;
+        webpage = "timer Start : " + String(TM_SEC_VAL, DEC) + "sec";
+      }
+      else
+      { // --- Timer 停止 ------
+        TM_STOP_GET = true;
+        TM_GO_GET = false;
+        webpage = "timer Stop";
+      }
+    }
+    
+    Serial.println(webpage);
+    return;
   }
 }
 
@@ -131,7 +144,7 @@ void timerStart()
   // ---- Timer 開始 ----------------
   if ((TM_SEC_VAL < TM_MIN) || (TM_SEC_VAL > TM_MAX))
   {
-    Serial.println("ERR: TM_SEC_VAL = " + String(TM_SEC_VAL, DEC) );
+    Serial.println("ERR: TM_SEC_VAL = " + String(TM_SEC_VAL, DEC));
     timerStop2();
     return;
   }
@@ -153,7 +166,7 @@ void timerStart()
     msg += String(timer_sec, DEC) + "秒";
   }
   String msg1 = msg + String("の、タイマーを開始します");
-  String msg2 = msg + String("タイマー"); 
+  String msg2 = msg + String("タイマー");
   Serial.println(msg1);
   stackchanReq(msg1, EXPR_HAPPY, msg2);
 
@@ -183,20 +196,20 @@ void timerStarted()
   if (TM_ELEAPSE_SEC > 15)
     ledMoveSec(TM_ELEAPSE_SEC);
 
-  //20秒間隔で読み上げ
+  // 20秒間隔で読み上げ
   if ((TM_ELEAPSE_SEC % 20 == 0) && (TM_ELEAPSE_SEC < TM_SEC_VAL))
   {
-    String msg ="";
+    String msg = "";
     if (TM_ELEAPSE_SEC < 60)
-      msg = String(TM_ELEAPSE_SEC,DEC) + "秒";
+      msg = String(TM_ELEAPSE_SEC, DEC) + "秒";
     else
     {
       int minutes = TM_ELEAPSE_SEC / 60;
       int seconds = TM_ELEAPSE_SEC % 60;
       if (seconds != 0)
-        msg = String(minutes,DEC) + "分" + String(seconds,DEC) + "秒";
+        msg = String(minutes, DEC) + "分" + String(seconds, DEC) + "秒";
       else
-        msg = String(minutes,DEC) + "分経過" ;
+        msg = String(minutes, DEC) + "分経過";
     }
     stackchanReq(msg, EXPR_HAPPY, msg, EXPR_NEUTRAL);
   }

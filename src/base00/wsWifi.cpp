@@ -348,7 +348,7 @@ bool wifiSmartConfigConnect()
 int wifiConnect2()
 {
   int cnNo = 0;
-  Serial.println("### Connect WiFi Start ###");
+  Serial.println("*** WiFi Connecting Start ***");
   WiFi.disconnect();
   WiFi.softAPdisconnect(true);
   WiFi.mode(WIFI_STA);
@@ -356,30 +356,30 @@ int wifiConnect2()
 
   if (SD_ENABLE)
   {
-    Serial.println("## " + String(++cnNo, DEC) + ".  CONNECTING : wsWifi.json in SD ");
-    if (wifiSelect(FLTYPE_SD))
-    {
-      Serial.println("\nCONNECTED : wsWifi.json in SD");
-      return cnNo;
-    }
+    // Serial.println("## " + String(++cnNo, DEC) + ".  CONNECTING : wsWifi.json in SD ");
+    // if (wifiSelect(FLTYPE_SD))
+    // {
+    //   Serial.println("\nCONNECTED : wsWifi.json in SD");
+    //   return cnNo;
+    // }
 
-    Serial.println("##  " + String(++cnNo, DEC) + ".  CONNECTING : wifi.txt in SD");
+    Serial.println("-- " + String(++cnNo, DEC) + ".  CONNECTING : wifi.txt in SD");
     // "wifi.txt" の接続
     if (wifiTxtSDConnect())
     {
-      Serial.println("\nCONNECTED : wifi.txt in SD");
+      Serial.println("\nWifi Connected! : wifi.txt in SD");
       return cnNo;
     }
   }
 
-  Serial.println("## " + String(++cnNo, DEC) + ".  CONNECTING : wsWifi.json in SPIFFS");
+  Serial.println("-- " + String(++cnNo, DEC) + ".  CONNECTING : wsWifi.json in SPIFFS");
   if (wifiSelect(FLTYPE_SPIFFS))
   {
     Serial.println("\nCONNECTED : wsWifi.json in SPIFFS");
     return cnNo;
   }
   
-  Serial.println("##  " + String(++cnNo, DEC) + ".  CONNECTING : privious wifi settings");
+  Serial.println("-- " + String(++cnNo, DEC) + ".  CONNECTING : privious wifi settings");
   // 前回接続情報での接続
   if (wifiNoSetupFileConnect())
   {
@@ -388,7 +388,7 @@ int wifiConnect2()
   }
 
   // SmartConfigでの接続
-  Serial.println("##  " + String(++cnNo, DEC) + ".  CONNECTING : SmartConfig");
+  Serial.println("-- " + String(++cnNo, DEC) + ".  CONNECTING : SmartConfig");
   if (wifiSmartConfigConnect())
   {
     Serial.println("\nCONNECTED : SmartConfigConnect wifi");
@@ -447,7 +447,7 @@ bool wifiTxtSDConnect()
   // "wifi.txt"ファイル
   if (!wifiTxtSDRead())
   {
-    Serial.println("Fail : reading wifi.txt in SD");
+    Serial.println("Fail: reading wifi.txt in SD");
     return false;
   }
 
@@ -465,7 +465,7 @@ bool wifiTxtSDConnect()
     // if (loopCount10sec++ > 10 * 2)
     if (loopCount20sec++ > (20 * 2))
     {
-      Serial.println(" faile to connect  wifi.txt");
+      Serial.println("Fail: cannot connect wife setting in wifi.txt in SD");
       return false;
     }
   }

@@ -49,8 +49,9 @@ void apikeySetting()
   // VOICETEXT_API_KEY = "***";
   //------------------------------
 
-  if (apiKeyJsonSDRead())
-    return;
+  // -- 250308 by NoRi ---------
+  // if (apiKeyJsonSDRead())
+  //   return;
   
   if (apiKeyTxtSDRead())
     return;

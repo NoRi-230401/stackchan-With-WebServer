@@ -91,27 +91,80 @@ void chatGptManage()
   }
 }
 
+// void wsHandleRandomSpeak(String modeS)
+// {
+//   if (modeS == "")
+//     return;
+
+//   String mode = modeS;
+//   mode.toUpperCase();
+
+//   if (mode == "ON")
+//   {
+//     if (!RANDOM_SPEAK_STATE)
+//       RANDOM_SPEAK_ON_GET = true;
+//   }
+//   else if (mode == "OFF")
+//   {
+//     if (RANDOM_SPEAK_STATE)
+//       RANDOM_SPEAK_OFF_GET = true;
+//   }
+//   else
+//     return;
+
+//   webpage = "randomSpeak : mode = " + modeS;
+//   Serial.println(webpage);
+// }
+
 void wsHandleRandomSpeak(String modeS)
 {
-  if (modeS == "")
-    return;
+  // if (modeS.equals(""))
+  //   return;
 
   String mode = modeS;
-  mode.toUpperCase();
+  String SetMode = "";
 
-  if (mode == "ON")
+  mode.toUpperCase();
+  if (mode.equals(String("ON")))
   {
     if (!RANDOM_SPEAK_STATE)
+    {
       RANDOM_SPEAK_ON_GET = true;
+      SetMode = "ON";
+    }
   }
-  else if (mode == "OFF")
+  else if (mode.equals(String("OFF")))
   {
     if (RANDOM_SPEAK_STATE)
+    {
       RANDOM_SPEAK_OFF_GET = true;
+      SetMode = "OFF";
+    }
+  }
+  else if (mode.equals(String("TOGGLE")))
+  {
+    if (!RANDOM_SPEAK_STATE)
+    {
+      RANDOM_SPEAK_ON_GET = true;
+      SetMode = "ON";
+    }
+    else if (RANDOM_SPEAK_STATE)
+    {
+      RANDOM_SPEAK_OFF_GET = true;
+      SetMode = "OFF";
+    }
   }
 
-  webpage = "randomSpeak : mode = " + modeS;
-  Serial.println(webpage);
+  if (SetMode.equals(""))
+  {
+    Serial.println("randomSpeak not set");
+    return;
+  }
+  else
+  {
+    webpage = "randomSpeak : mode = " + SetMode;
+    Serial.println(webpage);
+  }
 }
 
 void wsHandelChat(String textS, String voiceS)
@@ -433,6 +486,7 @@ bool setChatDoc(const String &data)
   return true;
 }
 
+#define TIMEOUT_CHATGPT 10000
 String https_post_json(const char *url, const char *json_string, const char *root_ca)
 {
   WK_ERR_NO = 0;
@@ -445,8 +499,8 @@ String https_post_json(const char *url, const char *json_string, const char *roo
     client->setCACert(root_ca);
     {
       HTTPClient https;
-      https.setTimeout(UINT16_MAX); // 最大値の約65秒にタイムアウトを設定
-
+      // https.setTimeout(UINT16_MAX); // 最大値の約65秒にタイムアウトを設定
+      https.setTimeout(TIMEOUT_CHATGPT);
       if (https.begin(*client, url))
       {
         https.addHeader("Content-Type", "application/json");
@@ -495,16 +549,15 @@ String https_post_json(const char *url, const char *json_string, const char *roo
   return payload;
 }
 
-
 String chatGpt(String json_string)
 {
   String response = "";
-  stackchanNow(EXPR_DOUBT,"考え中…");
+  stackchanNow(EXPR_DOUBT, "考え中…");
   String ret = https_post_json("https://api.openai.com/v1/chat/completions", json_string.c_str(), root_ca_openai);
-  stackchanNow(EXPR_NEUTRAL,"");
+  stackchanNow(EXPR_NEUTRAL, "");
 
   if (ret != "")
-  {// ret が正常である場合
+  { // ret が正常である場合
     WK_CNT = 0;
     DynamicJsonDocument doc(DOC_SIZE);
     DeserializationError error = deserializeJson(doc, ret.c_str());
@@ -520,21 +573,21 @@ String chatGpt(String json_string)
     {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.f_str());
-      stackchanNow(EXPR_SAD,"エラーです");
+      stackchanNow(EXPR_SAD, "エラーです");
       Serial.println("chatGPT err : desirialization ");
       response = "";
       return response;
     }
   }
   else
-  {// ret が　エラーだった場合
+  { // ret が　エラーだった場合
     String msg3 = "";
     if (WK_ERR_CODE == 0)
-      msg3 = "わかりません、番号 " + String(WK_ERR_NO,DEC)  + "です。";
+      msg3 = "わかりません、番号 " + String(WK_ERR_NO, DEC) + "です。";
     else if (WK_ERR_CODE < 0)
-      msg3 = "わかりません、番号 " + String(WK_ERR_NO,DEC) + "コード・マイナス" + String(abs(WK_ERR_CODE),DEC) + "です。";
+      msg3 = "わかりません、番号 " + String(WK_ERR_NO, DEC) + "コード・マイナス" + String(abs(WK_ERR_CODE), DEC) + "です。";
     else
-      msg3 = "わかりません、番号 " + String(WK_ERR_NO,DEC) + "コード" + String(WK_ERR_CODE,DEC) + "です。";
+      msg3 = "わかりません、番号 " + String(WK_ERR_NO, DEC) + "コード" + String(WK_ERR_CODE, DEC) + "です。";
 
     WK_LAST_ERR_NO = WK_ERR_NO;
     WK_LAST_ERR_CODE = WK_ERR_CODE;
@@ -542,15 +595,13 @@ String chatGpt(String json_string)
     WK_ERR_CODE = 0;
     WK_CNT++;
     Serial.println("WK_CNT = " + String(WK_CNT, DEC));
-    stackchanNow(EXPR_SAD,msg3);
+    stackchanNow(EXPR_SAD, msg3);
     Serial.println(msg3);
     response = "";
-    return response;    
+    return response;
   }
   return response;
 }
-
-
 
 void exec_chatGPT(String toChatGptText)
 {

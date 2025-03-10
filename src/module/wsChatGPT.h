@@ -89,11 +89,15 @@ extern uint16_t WST ;
 #define WST_TTS_ttsExit     0x5800
 #define WST_TTS_talkDone    0x5900
 
+
+#define BtnREQ_B 2
+extern int BTN_REQ;
+
 // -----------------------------------------------------------------------------
 void chatGptManage();
 void wsHandleRandomSpeak(String modeS);
 void wsHandelChat(String textS, String voiceS);
-void wsHandelChatGpt(String historyS,String charaS);
+void wsHandelChatGpt(String historyS,String charaS,String talkToS);
 void wsHandelChatCharacter(String ch_NoS,String ch_nameS, String ch_voiceS,String ch_rollS);
 bool initCharaJson(DynamicJsonDocument &charaJson);
 void wsHandleRoleSet(String roleS);

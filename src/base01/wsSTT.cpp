@@ -23,7 +23,8 @@ String SpeechToText()
 
 void SST_ChatGPT()
 {
-  delay(200);
+  // delay(200);
+  delay(50);
   M5.Speaker.end();
   
   int prev_SV_MD = SV_MD;

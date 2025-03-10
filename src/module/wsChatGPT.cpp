@@ -262,10 +262,18 @@ bool initCharaJson(DynamicJsonDocument &charaJson)
 
 int CHARA_NO = -1;
 
-void wsHandelChatGpt(String historyS, String charaS)
+void wsHandelChatGpt(String historyS, String charaS, String talkToS)
 {
-  if (historyS == "" && charaS == "")
+  if (historyS == "" && charaS == "" && talkToS == "")
     return;
+
+  if (talkToS.equalsIgnoreCase("start"))
+  {
+    webpage = "talk to chatGPT";
+    Serial.println("talk to chatGPT : start");
+    BTN_REQ = BtnREQ_B;
+    return;
+  }
 
   if (charaS == "0" || charaS == "1" || charaS == "2" || charaS == "3" || charaS == "4" || charaS == "5" || charaS == "6" || charaS == "7" || charaS == "8")
   {

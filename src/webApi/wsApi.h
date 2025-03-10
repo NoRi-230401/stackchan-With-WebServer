@@ -136,7 +136,7 @@ extern void wsHandleFace(String expression);
 extern void wsHandleBalloon(String text);
 extern void wsHandelChat(String textS, String voiceS);
 extern void wsHandelChatCharacter(String ch_NoS,String ch_nameS, String ch_voiceS,String ch_rollS);
-extern void wsHandelChatGpt(String historyS,String charaS);
+extern void wsHandelChatGpt(String historyS,String charaS,String talkToS);
 extern void wsHandleRandomSpeak(String modeS);
 extern void wsServoSetting(String txS,String servoS, String servoPortS,
       String servoModeS, String servoHomeXS, String servoHomeYS);

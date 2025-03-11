@@ -75,6 +75,7 @@ extern bool jsonStrSave(DynamicJsonDocument &jsonDoc,const String inJson, const 
 // extern bool SYSINFO_DISP_STATE;
 extern void stackchanReq(const String& speakStr, int expr=-1, const String balloonStr="$$SKIP$$", int afterExpr=-1 );
 extern void stackchanNow( int expr = -1, const String balloonStr = "$$SKIP$$");
+extern File fileOpen(int flType, const String path, const char *mode);
 
 // -----------------------------------------------------------------
 void servo(void *args);
@@ -92,6 +93,8 @@ void servoSetup2();
 void servoInit();
 void servoSetting();
 void servoFileRead();
+void servoFileReadSD();
+void servoFileReadSPIFFS();
 void sv_setEaseToX(int x);
 void sv_setEaseToY(int y);
 void sv_setEaseToXY(int x, int y);

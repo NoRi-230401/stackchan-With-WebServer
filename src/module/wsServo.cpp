@@ -4,18 +4,25 @@
 ServoEasing servo_x;
 ServoEasing servo_y;
 const String SERVO_SPIFFS = "/wsServo.json";
+const String SERVOTXT_SD = "/servo.txt";
+
 extern const String SV_MD_NAME[];
 const String SV_MD_NAME[] = {"Moving", "Home", "Random", "Center", "Swing", "Stop", "Adjust"};
 const String SV_AXIS_NAME[] = {"X", "Y", "XY"};
-const String SERVO_ITEM[] = {"servo", "servoPort", "servoMode", "servoHomeX", "servoHomeY"};
-String SV_PORT = "";
-const String jsonSERVO = "{\"servo\":[{\"servo\":\"off\",\"servoPort\":\"portC\",\"servoMode\":\"home\",\"servoHomeX\":\"90\",\"servoHomeY\":\"80\"}]}";
+// const String SERVO_ITEM[] = {"servo", "servoPort", "servoMode", "servoHomeX", "servoHomeY"};
+const String SERVO_ITEM[] = {"servoMode", "servoHomeX", "servoHomeY"};
+
+// String SV_PORT = "";
+// const String jsonSERVO = "{\"servo\":[{\"servo\":\"off\",\"servoPort\":\"portC\",\"servoMode\":\"home\",\"servoHomeX\":\"90\",\"servoHomeY\":\"80\"}]}";
+const String jsonSERVO = "{\"servo\":[{\"servoMode\":\"home\",\"servoHomeX\":\"90\",\"servoHomeY\":\"80\"}]}";
+
 bool SV_USE = false;
 bool SV_ADJUST_STATE = false;
 bool SV_MD_RANDOM_1st = false;
 bool SV_MD_MOVING_1st = false;
-int SV_MD = SV_MD_MOVING;
-int SV_MD_NAME_NO = SV_MD_MOVING;
+// int SV_MD = SV_MD_MOVING;
+int SV_MD = SV_MD_HOME;
+// int SV_MD_NAME_NO = SV_MD_MOVING;
 int SV_HOME_X = 90;
 int SV_HOME_Y = 80;
 int SV_PT_X = SV_HOME_X;
@@ -637,22 +644,103 @@ void servoSetting()
   servoFileRead();
 }
 
+// void servoInit()
+// {
+//   // ****** 初期値設定　**********
+//   SV_USE = false;
+//   SV_PORT = "portC";
+//   SV_PIN_X = SV_PIN_X_CORE2_PA;
+//   SV_PIN_Y = SV_PIN_Y_CORE2_PA;
+//   SV_MD = SV_MD_MOVING; // moving
+//   SV_ADJUST_STATE = false;
+//   REQUEST_NO = 0; // req none
+//   SV_MD_NAME_NO = SV_MD_MOVING;
+//   SV_HOME_X = 90;
+//   SV_HOME_Y = 80;
+// }
+
 void servoInit()
 {
   // ****** 初期値設定　**********
   SV_USE = false;
-  SV_PORT = "portC";
-  SV_PIN_X = SV_PIN_X_CORE2_PA;
-  SV_PIN_Y = SV_PIN_Y_CORE2_PA;
-  SV_MD = SV_MD_MOVING; // moving
+  SV_PIN_X = SV_PIN_X_CORE2_PC;
+  SV_PIN_Y = SV_PIN_Y_CORE2_PC;
+  SV_MD = SV_MD_HOME; // HOME
   SV_ADJUST_STATE = false;
   REQUEST_NO = 0; // req none
-  SV_MD_NAME_NO = SV_MD_MOVING;
+  // SV_MD_NAME_NO = SV_MD_HOME;
   SV_HOME_X = 90;
   SV_HOME_Y = 80;
 }
 
-void servoFileRead()
+// void servoFileReadSD();
+void servoFileReadSD()
+{
+  File fs = fileOpen(FLTYPE_SD, SERVOTXT_SD, "r");
+  if (!fs)
+  {
+    // SD.end();
+    Serial.println("FAIL : servo.txt not open ");
+    SV_USE = false;
+    SV_PIN_X = SV_PIN_X_CORE2_PC;
+    SV_PIN_Y = SV_PIN_Y_CORE2_PC;
+    Serial.println("SERVO USE   = OFF");
+    Serial.println("SERVO PIN_X = " + String(SV_PIN_X, 10));
+    Serial.println("SERVO PIN_Y = " + String(SV_PIN_Y, 10));
+    return;
+  }
+
+  size_t sz = fs.size();
+  char buf[sz + 1];
+  fs.read((uint8_t *)buf, sz);
+  buf[sz] = 0;
+  fs.close();
+
+  int y = 0;
+  int z = 0;
+  for (int x = 0; x < sz; x++)
+  {
+    if (buf[x] == 0x0a || buf[x] == 0x0d)
+      buf[x] = 0;
+    else if (!y && x > 0 && !buf[x - 1] && buf[x])
+      y = x;
+    else if (!z && x > 0 && !buf[x - 1] && buf[x])
+      z = x;
+  }
+
+  String S_ON_OFF = "";
+  String S_PORT_X = "";
+  String S_PORT_Y = "";
+
+  S_ON_OFF = String(buf);
+  S_PORT_X = String(&buf[y]);
+  S_PORT_Y = String(&buf[z]);
+
+  if (S_ON_OFF.equalsIgnoreCase("on"))
+    SV_USE = true;
+  else
+    SV_USE = false;
+
+  int sx = S_PORT_X.toInt();
+  int sy = S_PORT_Y.toInt();
+  if (sx != 0 && sy != 0)
+  {
+    SV_PIN_X = sx;
+    SV_PIN_Y = sy;
+  }
+
+  Serial.println("SUCCESS : Read from servo.txt ");
+  if (SV_USE)
+    Serial.println("SERVO USE   = ON");
+  else
+    Serial.println("SERVO USE   = OFF");
+
+  Serial.println("SERVO PIN_X = " + String(SV_PIN_X, 10));
+  Serial.println("SERVO PIN_Y = " + String(SV_PIN_Y, 10));
+  return;
+}
+
+void servoFileReadSPIFFS()
 {
   //----------------------------------
   DynamicJsonDocument servoJson(SERVOJSON_SIZE);
@@ -669,38 +757,41 @@ void servoFileRead()
   JsonObject object = jsonArray[0];
   int cnt = 0;
 
-  // servo
-  String getStr10 = object[SERVO_ITEM[0]];
-  if (getStr10 != "" && (getStr10 != "null"))
-  {
-    String getData = getStr10;
-    getData.toLowerCase();
-    if (getData == "on")
-      SV_USE = true;
+  // SV_USE/SV_PIN_X/SV_PIN_Y --- Read from SD "servo.txt" ----
+  // ---------------------------------------------------------------------
+  // // servo
+  // String getStr10 = object[SERVO_ITEM[0]];
+  // if (getStr10 != "" && (getStr10 != "null"))
+  // {
+  //   String getData = getStr10;
+  //   getData.toLowerCase();
+  //   if (getData == "on")
+  //     SV_USE = true;
 
-    Serial.println("Servo : " + SERVO_ITEM[0] + " = " + getStr10);
-    cnt++;
-  }
+  //   Serial.println("Servo : " + SERVO_ITEM[0] + " = " + getStr10);
+  //   cnt++;
+  // }
 
-  // servoPort
-  String getStr11 = object[SERVO_ITEM[1]];
-  if (getStr11 != "" && (getStr11 != "null"))
-  {
-    String getData = getStr11;
-    getData.toUpperCase();
-    if (getData == "PORTC")
-    {
-      SV_PORT = "portC";
-      SV_PIN_X = SV_PIN_X_CORE2_PC;
-      SV_PIN_Y = SV_PIN_Y_CORE2_PC;
-    }
+  // // servoPort
+  // String getStr11 = object[SERVO_ITEM[1]];
+  // if (getStr11 != "" && (getStr11 != "null"))
+  // {
+  //   String getData = getStr11;
+  //   getData.toUpperCase();
+  //   if (getData == "PORTC")
+  //   {
+  //     SV_PORT = "portC";
+  //     SV_PIN_X = SV_PIN_X_CORE2_PC;
+  //     SV_PIN_Y = SV_PIN_Y_CORE2_PC;
+  //   }
 
-    Serial.println("Servo : " + SERVO_ITEM[1] + " = " + getStr11);
-    cnt++;
-  }
+  //   Serial.println("Servo : " + SERVO_ITEM[1] + " = " + getStr11);
+  //   cnt++;
+  // }
+  // -----------------------------------------------------------------------------------
 
   // servoMode
-  String getStr12 = object[SERVO_ITEM[2]];
+  String getStr12 = object[SERVO_ITEM[0]];
   if (getStr12 != "" && (getStr12 != "null"))
   {
     String getData = getStr12;
@@ -708,22 +799,22 @@ void servoFileRead()
     if (getData == "HOME")
     {
       SV_MD = SV_MD_HOME;
-      SV_MD_NAME_NO = SV_MD_HOME;
+      // SV_MD_NAME_NO = SV_MD_HOME;
     }
     else if (getData == "ADJUST")
     {
       SV_MD = SV_MD_NONE;
       SV_ADJUST_STATE = true;
-      SV_MD_NAME_NO = SV_MD_ADJUST;
+      // SV_MD_NAME_NO = SV_MD_ADJUST;
       REQUEST_NO = REQ_SV_MD_ADJUST;
     }
 
-    Serial.println("Servo : " + SERVO_ITEM[2] + " = " + getStr12);
+    Serial.println("Servo : " + SERVO_ITEM[0] + " = " + getStr12);
     cnt++;
   }
 
   // servoHomeX
-  String getStr13 = object[SERVO_ITEM[3]];
+  String getStr13 = object[SERVO_ITEM[1]];
   if (getStr13 != "" && (getStr13 != "null"))
   {
     int getVal = getStr13.toInt(); // 70 <= HomeX <=110
@@ -735,12 +826,12 @@ void servoFileRead()
 
     SV_HOME_X = getVal;
 
-    Serial.println("Servo : " + SERVO_ITEM[3] + " = " + getStr13);
+    Serial.println("Servo : " + SERVO_ITEM[1] + " = " + getStr13);
     cnt++;
   }
 
   // servoHomeY
-  String getStr14 = object[SERVO_ITEM[4]];
+  String getStr14 = object[SERVO_ITEM[2]];
   if (getStr14 != "" && (getStr14 != "null"))
   {
     int getVal = getStr14.toInt(); // 60 <= HomeY <= 100
@@ -752,12 +843,125 @@ void servoFileRead()
 
     SV_HOME_Y = getVal;
 
-    Serial.println("Servo : " + SERVO_ITEM[4] + " = " + getStr14);
+    Serial.println("Servo : " + SERVO_ITEM[2] + " = " + getStr14);
     cnt++;
   }
 
   Serial.println("** wsServo.json total " + String(cnt, DEC) + " item read **");
 }
+
+void servoFileRead()
+{
+  servoFileReadSD();
+  servoFileReadSPIFFS();
+}
+
+// void servoFileRead()
+// {
+//   //----------------------------------
+//   DynamicJsonDocument servoJson(SERVOJSON_SIZE);
+
+//   if (!jsonRead(FLTYPE_SPIFFS, servoJson, SERVO_SPIFFS))
+//   {
+//     Serial.println("DeserializationError in wsServo.json in SPIFFS");
+
+//     Serial.println("initialize wsServo.json in SPIFFS");
+//     jsonSERVOinit(servoJson);
+//   }
+
+//   JsonArray jsonArray = servoJson["servo"];
+//   JsonObject object = jsonArray[0];
+//   int cnt = 0;
+
+//   // servo
+//   String getStr10 = object[SERVO_ITEM[0]];
+//   if (getStr10 != "" && (getStr10 != "null"))
+//   {
+//     String getData = getStr10;
+//     getData.toLowerCase();
+//     if (getData == "on")
+//       SV_USE = true;
+
+//     Serial.println("Servo : " + SERVO_ITEM[0] + " = " + getStr10);
+//     cnt++;
+//   }
+
+//   // servoPort
+//   String getStr11 = object[SERVO_ITEM[1]];
+//   if (getStr11 != "" && (getStr11 != "null"))
+//   {
+//     String getData = getStr11;
+//     getData.toUpperCase();
+//     if (getData == "PORTC")
+//     {
+//       SV_PORT = "portC";
+//       SV_PIN_X = SV_PIN_X_CORE2_PC;
+//       SV_PIN_Y = SV_PIN_Y_CORE2_PC;
+//     }
+
+//     Serial.println("Servo : " + SERVO_ITEM[1] + " = " + getStr11);
+//     cnt++;
+//   }
+
+//   // servoMode
+//   String getStr12 = object[SERVO_ITEM[2]];
+//   if (getStr12 != "" && (getStr12 != "null"))
+//   {
+//     String getData = getStr12;
+//     getData.toUpperCase();
+//     if (getData == "HOME")
+//     {
+//       SV_MD = SV_MD_HOME;
+//       // SV_MD_NAME_NO = SV_MD_HOME;
+//     }
+//     else if (getData == "ADJUST")
+//     {
+//       SV_MD = SV_MD_NONE;
+//       SV_ADJUST_STATE = true;
+//       // SV_MD_NAME_NO = SV_MD_ADJUST;
+//       REQUEST_NO = REQ_SV_MD_ADJUST;
+//     }
+
+//     Serial.println("Servo : " + SERVO_ITEM[2] + " = " + getStr12);
+//     cnt++;
+//   }
+
+//   // servoHomeX
+//   String getStr13 = object[SERVO_ITEM[3]];
+//   if (getStr13 != "" && (getStr13 != "null"))
+//   {
+//     int getVal = getStr13.toInt(); // 70 <= HomeX <=110
+//     if (getVal <= 70)
+//       getVal = 70;
+
+//     if (getVal >= 110)
+//       getVal = 110;
+
+//     SV_HOME_X = getVal;
+
+//     Serial.println("Servo : " + SERVO_ITEM[3] + " = " + getStr13);
+//     cnt++;
+//   }
+
+//   // servoHomeY
+//   String getStr14 = object[SERVO_ITEM[4]];
+//   if (getStr14 != "" && (getStr14 != "null"))
+//   {
+//     int getVal = getStr14.toInt(); // 60 <= HomeY <= 100
+//     if (getVal <= 60)
+//       getVal = 60;
+
+//     if (getVal >= 100)
+//       getVal = 100;
+
+//     SV_HOME_Y = getVal;
+
+//     Serial.println("Servo : " + SERVO_ITEM[4] + " = " + getStr14);
+//     cnt++;
+//   }
+
+//   Serial.println("** wsServo.json total " + String(cnt, DEC) + " item read **");
+// }
 
 // 　後にsynchronizeを呼び出す
 void sv_setEaseToX(int x)

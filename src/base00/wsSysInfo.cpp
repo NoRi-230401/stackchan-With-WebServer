@@ -156,19 +156,19 @@ bool sysInfoGet(String txArg, String &txData)
       txData = msg;
     }
   }
-  else if (txArg == "servoPort")
-  {
-    if (SV_PORT == "portC")
-    {
-      msg = "servoPort = portC";
-      txData = msg;
-    }
-    else
-    {
-      msg = "servo = portA";
-      txData = msg;
-    }
-  }
+  // else if (txArg == "servoPort")
+  // {
+  //   if (SV_PORT == "portC")
+  //   {
+  //     msg = "servoPort = portC";
+  //     txData = msg;
+  //   }
+  //   else
+  //   {
+  //     msg = "servo = portA";
+  //     txData = msg;
+  //   }
+  // }
   else if (txArg == "led")
   {
     if (LED_OnOff_STATE == true)

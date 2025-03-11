@@ -2,7 +2,7 @@
 #include "main.h"
 
 const String WSS_NAME = "stackchan-With-WebServer";
-const String WSS_VER = "v401-250307a";
+const String WSS_VER = "v401b-250311a";
 const String WSS_VERSION = WSS_NAME + " " + WSS_VER;
 const String WSS_SD_BIN = "/03_stackchanWWS.bin";  // default-SDUpdater-bin-fileName 
 
@@ -56,6 +56,7 @@ void setup()
   muteOff();
   ledClearAll();
   WST = WST_SETUP_done;
+  Serial.println("*** End of SETUP ***");
 }
 
 void loop()

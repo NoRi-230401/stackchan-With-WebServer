@@ -52,7 +52,7 @@ void apikeySetting()
   // -- 250308 by NoRi ---------
   // if (apiKeyJsonSDRead())
   //   return;
-  
+
   if (apiKeyTxtSDRead())
     return;
 
@@ -154,8 +154,10 @@ void wsHandleSetting(String volumeS, String volumeDS, String vSpkNoS,
       nvs_set_u32(nvs_handle, "toneMode", tMode);
     nvs_close(nvs_handle);
 
-    Serial.println("toneMode = " + String(TONE_MODE, DEC));
-    webpage = "toneMode = " + String(TONE_MODE, DEC);
+    String tModeStr[] = {"0\n　:　無音", "1\n　:　有音(ボタン押下時)", "2\n　:　有音（WebAPI受信時）", "3\n　:　有音(ボタン＋WebAPI)", "4\n　:　LED点滅(無音)", "5\n　:　LED点滅（有音）"};
+    String msg = "toneMode = " + tModeStr[TONE_MODE];
+    Serial.println(msg);
+    webpage = msg;
   }
 
   // ---- mute -------
@@ -414,7 +416,7 @@ void M5StackConfig01()
   // M5.Display.setBrightness(config_brightness);
   // M5.Lcd.setTextSize(2);
   // M5.Display.print("\nHello StackChan!!\n\n");
-  // Serial.println("Hello StackChan!!"); 
+  // Serial.println("Hello StackChan!!");
 }
 
 void M5StackConfig02()
@@ -423,13 +425,13 @@ void M5StackConfig02()
   M5.Display.setBrightness(config_brightness);
   M5.Lcd.setTextSize(2);
   M5.Display.print("\nHello StackChan!!\n\n");
-  Serial.println("Hello StackChan!!"); 
+  Serial.println("Hello StackChan!!");
 }
 
 void M5FileSystemBegin()
 {
-// --- init File System ----
-  isSPIFFS = 1;   // 1 -> SPIFFS   0 -> SD
+  // --- init File System ----
+  isSPIFFS = 1; // 1 -> SPIFFS   0 -> SD
 
   // Serial.println("SPIFFS.begin Start ...");
   if (!SPIFFS.begin(true))
@@ -463,7 +465,6 @@ void M5FileSystemBegin()
   else
     SD_ENABLE = true;
 }
-
 
 bool jsonAPIKEYinit(DynamicJsonDocument &jsonDoc)
 {

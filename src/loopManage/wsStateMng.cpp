@@ -11,14 +11,14 @@ void stateManage()
   switch (WST)
   {
   case WST_SETUP_done:
-    log_free_size("setup() --- END --- ");
-    showExeTime("setup() --- END --- ");
+    log_free_size("setup() : --- END --- ");
+      showExeTime("setup() : --- END --- ");
     WST = WST_LOOP;
     return;
 
   case WST_chatGPT_exit:
-    log_free_size("chatGPT Exit : ");
-    showExeTime("chatGPT Exi : ");
+    log_free_size("chatGPT exit ");
+      showExeTime("chatGPT exit : ");
     WST = WST_LOOP;
     return;
 

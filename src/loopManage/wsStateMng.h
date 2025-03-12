@@ -11,7 +11,7 @@ extern Avatar avatar;
 
 extern void log_free_size(const char *text);
 extern String getHeapFreeSize();
-extern void log_free_size(const char *text);
+// extern void log_free_size(const char *text);
 
 // --- showExeTime ------- 
 #define EXE_TM_MD0 0 // (default) disp and timer reset

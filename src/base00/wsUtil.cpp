@@ -283,7 +283,7 @@ bool getJsonItem(String flName, String item, String &getData, DynamicJsonDocumen
 // 空きメモリをシリアル出力
 void log_free_size(const char *text)
 {
-  M5.Log.printf("%s * free size of Memory (def-ps-dma:kB): %4d-%4d-%3d *\n", text,
+  M5.Log.printf("%s ** free size of Memory(kB): %4d-%4d-%3d  [def-ps-dma] **\n", text,
                 heap_caps_get_free_size(MALLOC_CAP_DEFAULT) / 1024,
                 heap_caps_get_free_size(MALLOC_CAP_SPIRAM) / 1024,
                 heap_caps_get_free_size(MALLOC_CAP_DMA) / 1024);

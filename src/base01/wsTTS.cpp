@@ -9,7 +9,7 @@ String SPEECH_TEXT = "";
 void ttsDo(const String &speechText)
 {
   WST = WST_TTS_start;
-  log_free_size("VOICEVOX : IN");
+  log_free_size("VOICEVOX : IN ");
   Serial.println("------- [ speak to you ] -------");
   Serial.println(speechText);
   Serial.println("--------------------------------");
@@ -17,7 +17,8 @@ void ttsDo(const String &speechText)
   String return_string = execute_voicevox(speechText, TTS_vSpkNo);
   if(return_string=="")
   {
-    Serial.println("voicevox Err");
+    Serial.println("VOICEBOX ERROR!");
+    showExeTime("VOICEVOX : ERROR and Exit");
     WST = WST_TTS_exit;
     return;
   }
@@ -30,7 +31,7 @@ void ttsDo(const String &speechText)
     if ( return_string != "")
         tts_voiceVox->talk_https(return_string);
 
-    showExeTime("VOICEVOX : mp3Url get then start speaking");
+    showExeTime("VOICEVOX : mp3Url get");
   }
 }
 

@@ -494,7 +494,7 @@ bool setChatDoc(const String &data)
   return true;
 }
 
-#define TIMEOUT_CHATGPT 10000
+#define TIMEOUT_CHATGPT 15000   // 15000 mSec ---> 15 Sec
 String https_post_json(const char *url, const char *json_string, const char *root_ca)
 {
   WK_ERR_NO = 0;
@@ -507,12 +507,19 @@ String https_post_json(const char *url, const char *json_string, const char *roo
     client->setCACert(root_ca);
     {
       HTTPClient https;
-      // https.setTimeout(UINT16_MAX); // 最大値の約65秒にタイムアウトを設定
+      // TIMEOUT設定
       https.setTimeout(TIMEOUT_CHATGPT);
+      https.setConnectTimeout(TIMEOUT_CHATGPT);
+
       if (https.begin(*client, url))
       {
         https.addHeader("Content-Type", "application/json");
         https.addHeader("Authorization", String("Bearer ") + OPENAI_API_KEY);
+
+        // 再度TIMEOUT設定
+        https.setTimeout(TIMEOUT_CHATGPT);
+        https.setConnectTimeout(TIMEOUT_CHATGPT);
+  
         int httpCode = https.POST((uint8_t *)json_string, strlen(json_string));
 
         WK_ERR_CODE = httpCode;
@@ -614,7 +621,7 @@ String chatGpt(String json_string)
 void exec_chatGPT(String toChatGptText)
 {
   showExeTime("", EXE_TM_MD_START); // timer start
-  log_free_size("\nChatGPT  : IN");
+  log_free_size("\nChatGPT  : IN ");
   WST = WST_chatGPT_start;
 
   Serial.println("----- [ talk to chatGPT ] -----");
@@ -661,7 +668,7 @@ void exec_chatGPT(String toChatGptText)
     { // chatGPT応答が正常な場合
       chatHistory.push_back(chatResponse);
       stackchanReq(chatResponse, EXPR_HAPPY, "$$SKIP$$", EXPR_NEUTRAL);
-      showExeTime("ChatGPT  : chatResponse get, then move to VOICEVOX");
+      showExeTime("ChatGPT  : Response get");
       log_free_size("ChatGPT  : OUT");
       WST = WST_chatGPT_done;
       return;

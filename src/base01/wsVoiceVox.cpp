@@ -1,6 +1,5 @@
 // --------------- VoiceVox.cpp ----------------------------------
 #include "wsVoiceVox.h"
-#define TIMEOUT_VX 10000
 
 TaskHandle_t voicevox_task_handle;
 
@@ -51,16 +50,26 @@ VoiceVox::~VoiceVox()
     vTaskDelete(voicevox_task_handle);
 }
 
+
+#define TIMEOUT_VX 5000
 String VoiceVox::synthesis(const String &speechText)
 {
     HTTPClient https;
     // https.setTimeout(UINT16_MAX); // 最大値の約65秒にタイムアウトを設定
     https.setTimeout(TIMEOUT_VX);    // タイムアウト設定
+    https.setConnectTimeout(TIMEOUT_VX);
+
+    // delay(100);
+    delay(10);
     if (!https.begin(url, root_ca_voicevox))
     {
         M5.Log.println("VOICEVOX：接続失敗-Timeout");
         return "";
     }
+
+    // Timeout再設定
+    https.setTimeout(TIMEOUT_VX);    // タイムアウト設定
+    https.setConnectTimeout(TIMEOUT_VX);
 
     https.addHeader("content-type", "application/x-www-form-urlencoded");
     const String send_data = "key=" + VOICEVOX_API_KEY + "&speaker=" + spkNo + "&text=" + speechText;
@@ -68,10 +77,15 @@ String VoiceVox::synthesis(const String &speechText)
     int http_code = https.POST(send_data.c_str());
     if (!(http_code == HTTP_CODE_OK))
     {
-        M5.Log.printf("VOICEVOX：HTTPSエラー(%d %s)\n", http_code, https.errorToString(http_code).c_str());
-        avatar.setSpeechText("VOICEVOX TimeOut Error");
+        // "VOICEVOX：HTTPSエラー(%d %s)\n", http_code, https.errorToString(http_code).c_str());
+        String msg = "VOICEVOX:errNo.= " + String(http_code) + " : " + https.errorToString(http_code)+"\n";
+        M5.Log.printf(msg.c_str());
+        
+        msg = "Voicevox:Err#" + String(http_code);
+        avatar.setSpeechText(msg.c_str());
         avatar.setExpression(m5avatar::Expression::Doubt);
-        delay(2000);
+
+        delay(3000);
         return "";
     }
 

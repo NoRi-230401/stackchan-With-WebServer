@@ -70,6 +70,7 @@ extern void stackchanNow( int expr = -1, const String balloonStr = "$$SKIP$$");
 #define EXPR_SAD 4
 #define EXPR_ANGRY 5
 
+
 // --- Wss StaTe (WST) define ------- 
 extern uint16_t WST ;
 #define WST_INIT            0x0000
@@ -77,16 +78,15 @@ extern uint16_t WST ;
 #define WST_SETUP_done      0x1900
 #define WST_LOOP            0x2000
 #define WST_STT             0x3000
-
 #define WST_chatGPT_start   0x4000
 #define WST_chatGPT_reqGet  0x4200
 #define WST_chatGPT_exit    0x4800
 #define WST_chatGPT_done    0x4900
-
 #define WST_TTS_start       0x5000
 #define WST_TTS_mp3urlGet   0x5100
 #define WST_TTS_talkStart   0x5200
-#define WST_TTS_ttsExit     0x5800
+#define WST_TTS_talking     0x5300
+#define WST_TTS_exit        0x5800
 #define WST_TTS_talkDone    0x5900
 
 
@@ -113,6 +113,9 @@ void exec_chatGPT(String text);
 bool saveChatDoc();
 void chatGptSetup();
 void chatHistoryCls();
+void setNextSelfTalkTime();
+void setVirtualSelfTalkTime();
+
 // ---- -------------end of < WS_CHATGPT_H > --------------------------------------
 #endif
 

@@ -1,28 +1,21 @@
 // ----------------------------<wsChatGPT.cpp>------------------------------------
 #include "wsChatGPT.h"
+#define GET_ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
-// const String chatStrIData =
-//     "{\"model\": \"gpt-3.5-turbo-0613\",\"max_tokens\":512,\"messages\": [{\"role\": \"user\", \"content\": \""
-//     "\"}]}";
-
-// const String chatStrIData =
-//     "{\"model\": \"gpt-4o-mini\",\"max_tokens\":512,\"messages\": [{\"role\": \"user\", \"content\": \""
-//     "\"}]}";
-
+// ChatGPT API用のデータ
 const String chatStrIData =
     "{\"model\": \"gpt-4o-mini\",\"temperature\":0.7,\"max_tokens\":512,\"messages\": [{\"role\": \"user\", \"content\": \""
     "\"}]}";
 
+// character change（キャラ変）用の初期値
 const String charaStrIData = "{\"character\":[{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"},{\"name\":\"\",\"vSpkNo\":\"3\",\"role\":\"\"}]}";
 
 const String CHATDOC_SPI = "/data.json"; // chatDoc in SPIFFS
 const String CHARA_SPIFFS = "/wsCharacter.json";
-const int MAX_HISTORY = 5; // 保存する質問と回答の最大数
-
-String CHATDOC_INIT_BUF = "";
-
-DynamicJsonDocument CHAT_DOC(1024 * 10);
+const int MAX_HISTORY = 5;      // 保存する質問と回答の最大数
 std::deque<String> chatHistory; // 過去の質問と回答を保存するデータ構造
+String CHATDOC_INIT_BUF = "";
+DynamicJsonDocument CHAT_DOC(1024 * 10);
 
 // 「独り言モード」
 const String random_words[] = {"あなたは誰", "楽しい", "怒った", "可愛い", "悲しい", "眠い", "ジョークを言って", "泣きたい", "怒ったぞ", "こんにちは", "お疲れ様", "詩を書いて", "疲れた", "お腹空いた", "嫌いだ", "苦しい", "俳句を作って", "歌をうたって"};
@@ -43,13 +36,9 @@ int WK_LAST_ERR_CODE = 0;
 void chatGptManage()
 {
   // --  RandomSpeakManage ---
-  // if (RANDOM_SPEAK_ON_GET)
   if (RANDOM_SPEAK_ON_GET && statusMode != STM_SYSINFO)
   {
     RANDOM_SPEAK_ON_GET = false;
-
-    // if (SYSINFO_DISP_STATE)
-    //   sysInfoDispEnd();
 
     timerStop2();
     if (!RANDOM_SPEAK_STATE)
@@ -66,22 +55,17 @@ void chatGptManage()
 
   if (RANDOM_SPEAK_STATE && (millis() > (RANDOM_TM_LAST + RANDOM_TM)))
   {
-    RANDOM_TM_LAST = millis();               // 今回のRandomSpeak起動した時刻
-    RANDOM_TM = 1000 * (40 + random(0, 30)); // 次回のRandomSpeak起動までの時間
-
     if (!isTalking())
     {
-      exec_chatGPT(random_words[random(18)]);
+      int i = GET_ARRAY_SIZE(random_words);
+      exec_chatGPT(random_words[random(i)]);
+      setVirtualSelfTalkTime();
     }
   }
 
   // --- chatGPT REQ ----------
-  // if (REQ_chatGPT_GET)
   if (REQ_chatGPT_GET && statusMode != STM_SYSINFO)
   {
-    // if (SYSINFO_DISP_STATE)
-    //   sysInfoDispEnd();
-
     randomSpeakStop2();
     timerStop2();
 
@@ -91,30 +75,6 @@ void chatGptManage()
   }
 }
 
-// void wsHandleRandomSpeak(String modeS)
-// {
-//   if (modeS == "")
-//     return;
-
-//   String mode = modeS;
-//   mode.toUpperCase();
-
-//   if (mode == "ON")
-//   {
-//     if (!RANDOM_SPEAK_STATE)
-//       RANDOM_SPEAK_ON_GET = true;
-//   }
-//   else if (mode == "OFF")
-//   {
-//     if (RANDOM_SPEAK_STATE)
-//       RANDOM_SPEAK_OFF_GET = true;
-//   }
-//   else
-//     return;
-
-//   webpage = "randomSpeak : mode = " + modeS;
-//   Serial.println(webpage);
-// }
 
 void wsHandleRandomSpeak(String modeS)
 {
@@ -461,6 +421,19 @@ void randomSpeakStop2()
   RANDOM_SPEAK_ON_GET = false;
 }
 
+void setNextSelfTalkTime()
+{ // 前回の話しから、10-20秒後
+  RANDOM_TM_LAST = millis();
+  RANDOM_TM = 1000 * (10 + random(0, 10));
+}
+
+
+void setVirtualSelfTalkTime()
+{ // 仮の時間：10分後 --> 実際はWST_TTS_talkDoneで設定される
+  RANDOM_TM_LAST = millis();
+  RANDOM_TM = 10 * 60 * 1000; 
+}
+
 void randomSpeak(bool mode)
 {
   String speakMsg;
@@ -468,8 +441,7 @@ void randomSpeak(bool mode)
   if (mode)
   {
     speakMsg = "独り言始めます。";
-    RANDOM_TM_LAST = millis();
-    RANDOM_TM = 1000 * (40 + random(0, 30));
+    setVirtualSelfTalkTime();
     RANDOM_SPEAK_STATE = true;
   }
   else
@@ -480,7 +452,8 @@ void randomSpeak(bool mode)
 
   RANDOM_SPEAK_ON_GET = false;
   RANDOM_SPEAK_OFF_GET = false;
-  stackchanReq(speakMsg);
+  // stackchanReq(speakMsg);
+  stackchanReq(speakMsg, EXPR_HAPPY, speakMsg, EXPR_NEUTRAL);
 }
 
 bool setChatDoc(const String &data)
@@ -494,7 +467,7 @@ bool setChatDoc(const String &data)
   return true;
 }
 
-#define TIMEOUT_CHATGPT 15000   // 15000 mSec ---> 15 Sec
+#define TIMEOUT_CHATGPT 15000 // 15000 mSec ---> 15 Sec
 String https_post_json(const char *url, const char *json_string, const char *root_ca)
 {
   WK_ERR_NO = 0;
@@ -519,7 +492,7 @@ String https_post_json(const char *url, const char *json_string, const char *roo
         // 再度TIMEOUT設定
         https.setTimeout(TIMEOUT_CHATGPT);
         https.setConnectTimeout(TIMEOUT_CHATGPT);
-  
+
         int httpCode = https.POST((uint8_t *)json_string, strlen(json_string));
 
         WK_ERR_CODE = httpCode;
@@ -620,6 +593,13 @@ String chatGpt(String json_string)
 
 void exec_chatGPT(String toChatGptText)
 {
+  if (isTalking())
+  {
+    Serial.println("chatGPT exit : 話し中");
+    // WST = WST_chatGPT_exit;
+    return;
+  }
+
   showExeTime("", EXE_TM_MD_START); // timer start
   log_free_size("\nChatGPT  : IN ");
   WST = WST_chatGPT_start;
@@ -654,31 +634,21 @@ void exec_chatGPT(String toChatGptText)
   String chatResponse = "";
   serializeJson(CHAT_DOC, chatDocJson);
   // -----------------------------------------------------------------
-
-  if (isTalking())
-  {
-    Serial.println("chatGPT exit : 話し中");
-    WST = WST_chatGPT_exit;
+  chatResponse = chatGpt(chatDocJson);
+  if (chatResponse != "")
+  { // chatGPT応答が正常な場合
+    chatHistory.push_back(chatResponse);
+    stackchanReq(chatResponse, EXPR_HAPPY, "$$SKIP$$", EXPR_NEUTRAL);
+    showExeTime("ChatGPT  : Response get");
+    log_free_size("ChatGPT  : OUT");
+    WST = WST_chatGPT_done;
     return;
   }
   else
   {
-    chatResponse = chatGpt(chatDocJson);
-    if (chatResponse != "")
-    { // chatGPT応答が正常な場合
-      chatHistory.push_back(chatResponse);
-      stackchanReq(chatResponse, EXPR_HAPPY, "$$SKIP$$", EXPR_NEUTRAL);
-      showExeTime("ChatGPT  : Response get");
-      log_free_size("ChatGPT  : OUT");
-      WST = WST_chatGPT_done;
-      return;
-    }
-    else
-    {
-      Serial.println("chatGPT exit : エラー");
-      WST = WST_chatGPT_exit;
-      return;
-    }
+    Serial.println("chatGPT exit : エラー");
+    WST = WST_chatGPT_exit;
+    return;
   }
 }
 

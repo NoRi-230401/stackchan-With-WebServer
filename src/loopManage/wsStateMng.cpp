@@ -12,13 +12,15 @@ void stateManage()
   {
   case WST_SETUP_done:
     log_free_size("setup() : --- END --- ");
-      showExeTime("setup() : --- END --- ");
+    showExeTime("setup() : --- END --- ");
     WST = WST_LOOP;
     return;
 
   case WST_chatGPT_exit:
     log_free_size("chatGPT exit ");
-      showExeTime("chatGPT exit : ");
+    showExeTime("chatGPT exit : ");
+    if (RANDOM_SPEAK_STATE == true)
+      setNextSelfTalkTime();
     WST = WST_LOOP;
     return;
 
@@ -28,10 +30,12 @@ void stateManage()
   case WST_TTS_talkStart:
     WST = WST_TTS_talking;
     return;
-  
+
   case WST_TTS_exit:
     log_free_size("TTS exit : ");
     showExeTime("TTS exit : ");
+    if (RANDOM_SPEAK_STATE == true)
+      setNextSelfTalkTime();
     WST = WST_LOOP;
     return;
 
@@ -40,12 +44,11 @@ void stateManage()
     avatar.setSpeechText("");
 
     if (REQ_EXPR_AFTER >= 0 && REQ_EXPR_AFTER <= 5)
-    {
       avatar.setExpression(expr_table[REQ_EXPR_AFTER]);
-      // setAvatarExpr(REQ_EXPR_AFTER);  //コメントアウトするとハングアップする
-      // Serial.println("exprAfter = " + String(REQ_EXPR_AFTER, DEC));
-    }
     REQ_EXPR_AFTER = -1;
+
+    if (RANDOM_SPEAK_STATE == true)
+      setNextSelfTalkTime();
 
     log_free_size("VOICEVOX : OUT");
     showExeTime("VOICEVOX : end of speaking");

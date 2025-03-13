@@ -91,7 +91,12 @@ void wsHandleSpeech(String sayS, String expressionS, String balloonS, String voi
 
 bool isTalking()
 {
-  return ((tts_voiceVox->is_talking) || (SPEECH_TEXT != ""));
+  // return ((tts_voiceVox->is_talking) || (SPEECH_TEXT != ""));
+
+  if(WST == WST_TTS_talking)
+    return true;
+  else
+    return false;
 }
 
 String execute_voicevox(const String &speechText, uint8_t spk_no)

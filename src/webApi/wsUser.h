@@ -32,13 +32,13 @@ String HTML_Header2Ng();
 String HTML_Header3();
 String HTML_Footer3();
 void Home();
-void handle_wss1();
-void handle_wss2();
-void handle_wss3();
-void handle_wss4();
+void handle_sApp1();
+void handle_sApp2();
+void handle_sApp3();
+void handle_sApp4();
 void handle_script();
 // void handle_wss5();
-bool htmlConv(const String flname);
+bool convIP(const String flname);
 bool scriptConv(const String flname);
 
 // ---- end of < WS_USER_H > --------------------------------------

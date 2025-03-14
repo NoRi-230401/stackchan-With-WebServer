@@ -2,72 +2,109 @@
 #include "wsUser.h"
 
 String SERVER_NAME = "stackchan";
-const String WSS1_HTML = "/wss1.html";
-const String WSS2_HTML = "/wss2.html";
-const String WSS3_HTML = "/wss3.html";
-const String WSS4_HTML = "/wss4.html";
-const String WSS5_HTML = "/wss5.html";
+const String SAPP1_HTML = "/sApp1.html";
+const String SAPP2_HTML = "/sApp2.html";
+const String SAPP3_HTML = "/sApp3.html";
+const String SAPP4_HTML = "/sApp4.html";
+const String SAPP5_HTML = "/sApp5.html";
 const String SCRIPT_JS = "/script.js";
-const String NAME_WSS1 = "Setting";
-const String NAME_WSS2 = "Servo";
-const String NAME_WSS3 = "Remote";
-const String NAME_WSS4 = "Chat";
-const String NAME_WSS5 = "wss5";
+const String NAME_sAPP1 = "Setting";
+const String NAME_sAPP2 = "Servo";
+const String NAME_sAPP3 = "Remote";
+const String NAME_sAPP4 = "Chat";
+const String NAME_sAPP5 = "APP5";
 
-String scriptPage="";
+String scriptPage = "";
 
 void setupUserHandler()
 {
   // #########################################################################
-  //  --- Html -----
-  server.on("/wss1", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_wss1();  request->send(200, "text/html", webpage); });
+  //  --- sAPP1-5 html -----
+  // server.on("/sApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp1();  request->send(200, "text/html", webpage); });
 
-  server.on("/wss2", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_wss2();  request->send(200, "text/html", webpage); });
+  // server.on("/sApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp2();  request->send(200, "text/html", webpage); });
 
-  server.on("/wss3", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_wss3();  request->send(200, "text/html", webpage); });
+  // server.on("/sApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp3();  request->send(200, "text/html", webpage); });
 
-  server.on("/wss4", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_wss4();  request->send(200, "text/html", webpage); });
+  // server.on("/sApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp4();  request->send(200, "text/html", webpage); });
 
-  server.on("/wss5", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/wss5.html", String(), false, processor05); });
+  // server.on("/sApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { request->send(SPIFFS, "/sAppt5.html", String(), false, processor05); });
 
   // #########################################################################
+  //  --- sAPP1-5 html -----
+  server.on("/sApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sApp1.html");  request->send(200, "text/html", webpage); });
+
+  server.on("/sApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sApp2.html");  request->send(200, "text/html", webpage); });
+
+  server.on("/sApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sApp3.html");  request->send(200, "text/html", webpage); });
+
+  server.on("/sApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sApp4.html");  request->send(200, "text/html", webpage); });
+
+  server.on("/sApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sApp5.html");  request->send(200, "text/html", webpage); });
+
+  // #########################################################################
+  server.on("/sScript.js", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/sScript.js"); request->send(200,"application/javascript", webpage); });
+
+  server.on("/sStyle.css", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/sStyle.css", "text/css"); });
+
   server.on("/icon.gif", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/icon.gif", "image/gif"); });
+           { request->send(SPIFFS, "/icon.gif", "image/gif"); });
+
+
+  // #########################################################################
+  //  --- uAPP1-5 html -----
+  // server.on("/uApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp1();  request->send(200, "text/html", webpage); });
+
+  // server.on("/uApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp2();  request->send(200, "text/html", webpage); });
+
+  // server.on("/uApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp3();  request->send(200, "text/html", webpage); });
+
+  // server.on("/uApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { handle_sApp4();  request->send(200, "text/html", webpage); });
+
+  // server.on("/uApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { request->send(SPIFFS, "/sAppt5.html", String(), false, processor05); });
+  // #########################################################################
+  // server.on("/icon.gif", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { request->send(SPIFFS, "/icon.gif", "image/gif"); });
 
   // server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/script.js", "application/javascript"); });
+  //           { handle_script(); request->send(200,"application/javascript",scriptPage); });
 
-  server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_script(); request->send(200,"application/javascript",scriptPage); });
-
-  server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/style.css", "text/css"); });
-
-  // server.on("/smart-style.css", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/smart-style.css", "text/css"); });
-
-  // server.on("/pc-style.css", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/pc-style.css", "text/css"); });
-
+  // server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { request->send(SPIFFS, "/style.css", "text/css"); });
   // ###########################################################################
 }
 
 void serverSend(AsyncWebServerRequest *request)
 {
-  if (webpage.equals("NG"))  {
+  if (webpage.equals("NG"))
+  {
     webpage = HTML_Header2Ng() + webpage + HTML_Footer2();
     request->send(400, "text/html", webpage);
   }
-  else if(webpage.equals("OK"))  {
+  else if (webpage.equals("OK"))
+  {
     Serial.println("send -> OK");
     request->send(200, "text/plain", String("OK"));
   }
-  else  {
+  else
+  {
     String tmpPage;
     tmpPage = HTML_Header2() + webpage + HTML_Footer2();
     webpage = tmpPage;
@@ -91,38 +128,35 @@ void serverSend3(AsyncWebServerRequest *request)
   }
 }
 
-
-void handle_wss1()
+void handle_sApp1()
 {
-  htmlConv(WSS1_HTML);
+  convIP(SAPP1_HTML);
 }
 
-void handle_wss2()
+void handle_sApp2()
 {
-  htmlConv(WSS2_HTML);
+  convIP(SAPP2_HTML);
 }
 
-void handle_wss3()
+void handle_sApp3()
 {
-  htmlConv(WSS3_HTML);
+  convIP(SAPP3_HTML);
 }
 
-void handle_wss4()
+void handle_sApp4()
 {
-  htmlConv(WSS4_HTML);
+  convIP(SAPP4_HTML);
 }
 
-void handle_wss5()
+void handle_sApp5()
 {
-  htmlConv(WSS5_HTML);
+  convIP(SAPP5_HTML);
 }
 
 void handle_script()
 {
   scriptConv(SCRIPT_JS);
 }
-
-
 
 bool scriptConv(const String flname)
 {
@@ -170,13 +204,10 @@ bool scriptConv(const String flname)
   return true;
 }
 
-
-
-
-bool htmlConv(const String flname)
+bool convIP(const String flname)
 {
   // *************************************************************
-  // htmlファイル中の  "http://stackchan/"  を実際のIPアドレスに変換
+  // ファイル中の  "http://stackchan/"  を実際のIPアドレスに変換
   const char *findStr = "http://stackchan/";
   // *************************************************************
   webpage = "";
@@ -242,7 +273,7 @@ String processor05(const String &var)
     Serial.println(SERVER_NAME);
     return SERVER_NAME;
   }
-  if (var.equals("VOLUME_VALUE")) 
+  if (var.equals("VOLUME_VALUE"))
   {
     int vol = (int)VOLUME_VALUE;
     String vol_str = String(vol, DEC);
@@ -311,39 +342,38 @@ String HTML_Header()
   page += "<div class = 'topnav'>";
   page += "<a href='/dir'>Dir</a> ";
   page += "<a href='/upload'>Upload</a> ";
-  page += "<a href='/download'>Download</a> ";
-  page += "<a href='/stream'>Stream</a> ";
+  // page += "<a href='/download'>Download</a> ";
+  // page += "<a href='/stream'>Stream</a> ";
   page += "<a href='/delete'>Delete</a> ";
   page += "<a href='/rename'>Rename</a> ";
-  page += "<a href='/fileSystem?mode=toggle'>Spiffs/Sd</a>:" + FLS_NAME[isSPIFFS];
+  // page += "<a href='/fileSystem?mode=toggle'>Spiffs/Sd</a>:" + FLS_NAME[isSPIFFS];
   page += "</div>";
 
-  if (!isSPIFFS)
-  { // directory func to SD --- by NoRi -----
-    page += "<div class = 'topnav'>";
-    page += "<a href='/root_sd'>Root</a>CurrentDir = " + SdPath;
-    page += "<a href='/chdir'>Chdir</a> ";
-    page += "<a href='/mkdir'>Mkdir</a> ";
-    page += "<a href='/rmdir'>Rmdir</a>";
-    page += "</div>";
-    // page += "<br>";
-  }
+  // if (!isSPIFFS)
+  // { // directory func to SD --- by NoRi -----
+  //   page += "<div class = 'topnav'>";
+  //   page += "<a href='/root_sd'>Root</a>CurrentDir = " + SdPath;
+  //   page += "<a href='/chdir'>Chdir</a> ";
+  //   page += "<a href='/mkdir'>Mkdir</a> ";
+  //   page += "<a href='/rmdir'>Rmdir</a>";
+  //   page += "</div>";
+  //   // page += "<br>";
+  // }
 
   // page += "<br>";
   page += "<br><br>";
   page += "<div class = 'topnav2'>";
   page += "<a href='/' target='Home'>Home</a>";
-  page += "<a href='/wss1' target='" + NAME_WSS1 + "'>" + NAME_WSS1 + "</a> ";
-  page += "<a href='/wss2' target='" + NAME_WSS2 + "'>" + NAME_WSS2 + "</a> ";
-  page += "<a href='/wss3' target='" + NAME_WSS3 + "'>" + NAME_WSS3 + "</a> ";
-  page += "<a href='/wss4' target='" + NAME_WSS4 + "'>" + NAME_WSS4 + "</a> ";
-  // page += "<a href='/wss4'>" + NAME_WSS4 + "</a> ";
-  // page += "<a href='/wss5'>" + NAME_WSS5 + "</a> ";
+  page += "<a href='/sApp1.html' target='" + NAME_sAPP1 + "'>" + NAME_sAPP1 + "</a> ";
+  page += "<a href='/sApp2.html' target='" + NAME_sAPP2 + "'>" + NAME_sAPP2 + "</a> ";
+  page += "<a href='/sApp3.html' target='" + NAME_sAPP3 + "'>" + NAME_sAPP3 + "</a> ";
+  page += "<a href='/sApp4.html' target='" + NAME_sAPP4 + "'>" + NAME_sAPP4 + "</a> ";
+  // page += "<a href='/wss5'>" + NAME_sAPP5 + "</a> ";
   page += "<a href='/system'>Status</a>";
   page += "<a href='https://nori.rdy.jp/wss/' target='WSS-Support'>Support</a>";
   page += "</div>";
   page += "<br><br>";
-  
+
   return page;
 }
 
@@ -406,8 +436,6 @@ String HTML_Header2Ng()
   return page;
 }
 
-
-
 // #############################################################################################
 String HTML_Footer2()
 {
@@ -448,7 +476,7 @@ String HTML_Footer3()
   String page;
   // page += "<footer>";
   // page += "</footer>";
-  
+
   // page += "</pre><br><br>";
   page += "<br><br>";
   page += "<div><form><input type='button' name='button' value='このウィンドウを閉じる' onclick='window.close();'></form><div>";

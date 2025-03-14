@@ -114,7 +114,7 @@
   <a href="#wifiSelect">５. Wifi設定</a><br>
   <br>
   <b>（★注１）応答に時間がかかるので動作中であれば停止してください。</b><br>
-  　　<a href="http://stackchan/randomSpeak?mode=off">「独り言」停止</a>
+  　　<a href="http://stackchan/selfTalk?mode=off">「独り言」停止</a>
   　　<a href="http://stackchan/timer?mode=Stop">「タイマー」停止</a>
   <br><br>
   <b>（★注２）ここで行う設定は、全てSPIFFS上のファイルに保存されます。</b><br>
@@ -151,8 +151,8 @@
   </form>
   <br>
 
-  「独り言」 ：　<a href="http://stackchan/randomSpeak?mode=on">開始</a>
-  　　<a href="http://stackchan/randomSpeak?mode=off">停止</a>
+  「独り言」 ：　<a href="http://stackchan/selfTalk?mode=on">開始</a>
+  　　<a href="http://stackchan/selfTalk?mode=off">停止</a>
   <br><br>
   <form action="http://stackchan/setting?" method="get">vSpkNo:VOICEVOX話者番号(0-66)　<input type="text" name="vSpkNo"
       value="3" size="2" maxlength="2" />　 <input type="submit" value="送信" />
@@ -431,8 +431,8 @@ spiffs領域の"wsCharacter.json"ファイルにデータが保存されてい�
     　<input type="text" name="vSpkNo" value="-1" size="2" maxlength="2" />　　<input type="submit" value="送信" />
   </form>
   <br>
-  randomSpeak：　<a href="http://stackchan/startup?randomSpeak=on">on</a>
-  　　<a href="http://stackchan/startup?randomSpeak=off">off</a>
+  selfTalk：　<a href="http://stackchan/startup?selfTalk=on">on</a>
+  　　<a href="http://stackchan/startup?selfTalk=off">off</a>
   <br><br>
   <form action="http://stackchan/startup" method="get">
     timer(30-3599Sec, -1)：<input type="text" name="timer" value="-1" size="3" maxlength="3" />　　　　　<input type="submit"

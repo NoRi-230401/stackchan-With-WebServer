@@ -85,7 +85,7 @@ void wsHandleTimer(String TmSecS, String TmMinS, String timerModeS)
     {
       if (!TM_STARTED && statusMode != STM_SYSINFO)
       {
-        randomSpeakStop2();
+        StopSelfTalk2();
         TM_GO_GET = true;
         TM_STOP_GET = false;
         webpage = "timer Start : " + String(TM_SEC_VAL, DEC) + "sec";
@@ -112,7 +112,7 @@ void wsHandleTimer(String TmSecS, String TmMinS, String timerModeS)
     {
       if (!TM_STARTED)
       { // ---- Timer 開始 ------
-        randomSpeakStop2();
+        StopSelfTalk2();
         TM_GO_GET = true;
         TM_STOP_GET = false;
         webpage = "timer Start : " + String(TM_SEC_VAL, DEC) + "sec";

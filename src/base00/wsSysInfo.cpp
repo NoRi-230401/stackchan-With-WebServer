@@ -29,13 +29,13 @@ void wsHandleSysInfo(String txS, String dispS, String modeS)
 
   if (dispS != "")
   {
-    if (dispS == "off")
+    if (dispS.equalsIgnoreCase("off"))
     {
       avatarResume();
       // sysInfoDispEnd();
       webpage = "OK";
     }
-    else if (dispS == "on")
+    else if (dispS.equalsIgnoreCase("on"))
     {
       avatarStop();
       avatarStop2();
@@ -48,7 +48,7 @@ void wsHandleSysInfo(String txS, String dispS, String modeS)
 
   if (modeS != "")
   {
-    if (modeS == "all")
+    if (modeS.equalsIgnoreCase("all"))
     {
       sysInfoDispMake(0);
       webpage = SYSINFO_MSG;
@@ -70,40 +70,40 @@ bool sysInfoGet(String txArg, String &txData)
   String msg = "";
   char msg2[100];
 
-  if (txArg == "version")
+  if (txArg.equalsIgnoreCase("version"))
   {
     txData = WSS_VERSION;
   }
-  else if (txArg == "IP_Addr")
+  else if (txArg.equalsIgnoreCase("IP_Addr"))
   {
     txData = "IP_Addr = " + IP_ADDR;
     Serial.println(txData);
   }
-  else if (txArg == "SSID")
+  else if (txArg.equalsIgnoreCase("SSID"))
   {
     txData = "SSID = " + SSID;
   }
-  else if (txArg == "batteryLevel")
+  else if (txArg.equalsIgnoreCase("batteryLevel"))
   {
     sprintf(msg2, "batteryLevel = %d %%", getBatteryLevel());
     txData = msg2;
   }
-  else if (txArg == "volume")
+  else if (txArg.equalsIgnoreCase("volume"))
   {
     sprintf(msg2, "volume = %d", VOLUME_VALUE);
     txData = msg2;
   }
-  else if (txArg == "vSpeakerNo" || txArg == "vSpkNo")
+  else if (txArg.equalsIgnoreCase("vSpeakerNo") || txArg.equalsIgnoreCase("vSpkNo"))
   {
     sprintf(msg2, "vSpkNo = %d", TTS_vSpkNo);
     txData = msg2;
   }
-  else if (txArg == "timer")
+  else if (txArg.equalsIgnoreCase("timer"))
   {
     sprintf(msg2, "timer = %d sec", TM_SEC_VAL);
     txData = msg2;
   }
-  else if (txArg == "mute")
+  else if (txArg.equalsIgnoreCase("mute"))
   {
     if (MUTE_ON_STATE)
     {
@@ -116,20 +116,20 @@ bool sysInfoGet(String txArg, String &txData)
       txData = msg;
     }
   }
-  else if (txArg == "randomSpeak")
+  else if (txArg.equalsIgnoreCase("selfTalk"))
   {
-    if (RANDOM_SPEAK_STATE)
+    if (SELF_TALK_STATE)
     {
-      msg = "randomSpeak = on";
+      msg = "selfTalk = on";
       txData = msg;
     }
     else
     {
-      msg = "randomSpeak = off";
+      msg = "selfTalk = off";
       txData = msg;
     }
   }
-  else if (txArg == "uptime")
+  else if (txArg.equalsIgnoreCase("uptime"))
   {
     uint32_t uptime = millis() / 1000;
     uint16_t up_sec = uptime % 60;
@@ -138,12 +138,12 @@ bool sysInfoGet(String txArg, String &txData)
     sprintf(msg2, "uptime = %02d:%02d:%02d", up_hour, up_min, up_sec);
     txData = msg2;
   }
-  else if (txArg == "toneMode")
+  else if (txArg.equalsIgnoreCase("toneMode"))
   {
     sprintf(msg2, "toneMode = %d", TONE_MODE);
     txData = msg2;
   }
-  else if (txArg == "servo")
+  else if (txArg.equalsIgnoreCase("servo"))
   {
     if (SV_USE)
     {
@@ -156,20 +156,7 @@ bool sysInfoGet(String txArg, String &txData)
       txData = msg;
     }
   }
-  // else if (txArg == "servoPort")
-  // {
-  //   if (SV_PORT == "portC")
-  //   {
-  //     msg = "servoPort = portC";
-  //     txData = msg;
-  //   }
-  //   else
-  //   {
-  //     msg = "servo = portA";
-  //     txData = msg;
-  //   }
-  // }
-  else if (txArg == "led")
+  else if (txArg.equalsIgnoreCase("led"))
   {
     if (LED_OnOff_STATE == true)
     {
@@ -182,31 +169,27 @@ bool sysInfoGet(String txArg, String &txData)
       txData = msg;
     }
   }
-  else if (txArg == "WK_errorNo")
+  else if (txArg.equalsIgnoreCase("WK_errorNo"))
   {
     sprintf(msg2, "WK_errorNo = %d", WK_LAST_ERR_NO);
     txData = msg2;
   }
-  else if (txArg == "WK_errorCode")
+  else if (txArg.equalsIgnoreCase("WK_errorCode"))
   {
     sprintf(msg2, "WK_errorCode = %d", WK_LAST_ERR_CODE);
     txData = msg2;
   }
 
   // ---- Network Settings ---
-  else if (txArg == "SSID_PASSWD")
+  else if (txArg.equalsIgnoreCase("SSID_PASSWD"))
   {
     txData = "SSID_PASSWD = " + SSID_PASSWD;
   }
-  else if (txArg == "openAiApiKey")
+  else if (txArg.equalsIgnoreCase( "openAiApiKey"))
   {
     txData = "openAiApiKey = " + OPENAI_API_KEY;
   }
-  // else if (txArg == "voiceTextApiKey")
-  // {
-  //   txData = "voiceTextApiKey = " + VOICETEXT_API_KEY;
-  // }
-  else if (txArg == "voicevoxApiKey")
+  else if (txArg.equalsIgnoreCase("voicevoxApiKey"))
   {
     txData = "voicevoxApiKey = " + VOICEVOX_API_KEY;
   }
@@ -236,15 +219,6 @@ void sysInfoDispStart(uint8_t mode_no)
   // SYSINFO_DISP_STATE = true;
 }
 
-// void sysInfoDispEnd()
-// {
-//   // if (!SYSINFO_DISP_STATE)
-//   // {
-//   //   return;
-//   // }
-//   // delay(100);
-//   // SYSINFO_DISP_STATE = false;
-// }
 
 uint8_t getBatteryLevel()
 {
@@ -309,14 +283,14 @@ void sysInfo_m00_DispMake()
   SYSINFO_MSG += msg2;
   SYSINFO_MSG += "\nvSpkNo = " + String(TTS_vSpkNo, DEC);
 
-  if (RANDOM_SPEAK_STATE)
+  if (SELF_TALK_STATE)
   {
-    msg = "\nrandomSpeak = on";
+    msg = "\nselfTalk = on";
     SYSINFO_MSG += msg;
   }
   else
   {
-    msg = "\nrandomSpeak = off";
+    msg = "\nselfTalk = off";
     SYSINFO_MSG += msg;
   }
 

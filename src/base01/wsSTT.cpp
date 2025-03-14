@@ -28,7 +28,7 @@ void SST_ChatGPT()
   M5.Speaker.end();
   
   int prev_SV_MD = SV_MD;
-  randomSpeakStop2();
+  StopSelfTalk2();
 
   if (SV_USE)
     SV_MD = SV_MD_HOME;

@@ -19,11 +19,11 @@ DynamicJsonDocument CHAT_DOC(1024 * 10);
 
 // 「独り言モード」
 const String random_words[] = {"あなたは誰", "楽しい", "怒った", "可愛い", "悲しい", "眠い", "ジョークを言って", "泣きたい", "怒ったぞ", "こんにちは", "お疲れ様", "詩を書いて", "疲れた", "お腹空いた", "嫌いだ", "苦しい", "俳句を作って", "歌をうたって"};
-bool RANDOM_SPEAK_STATE = false; // 独り言モード　true -> on  false -> off
-bool RANDOM_SPEAK_ON_GET = false;
-bool RANDOM_SPEAK_OFF_GET = false;
-uint32_t RANDOM_TM = 0;      // 「独り言モード」待ち時間
-uint32_t RANDOM_TM_LAST = 0; // 「独り言モード」前回の実行時刻
+bool SELF_TALK_STATE = false; // 独り言モード　true -> on  false -> off
+bool SELF_TALK_ON_GET = false;
+bool SELF_TALK_OFF_GET = false;
+uint32_t SELF_TALK_NEXT_TM = 0;      // 「独り言モード」待ち時間
+uint32_t SELF_TALK_LAST_TM = 0; // 「独り言モード」前回の実行時刻
 bool REQ_chatGPT_GET = false;
 
 // 「わかりません」対策
@@ -35,38 +35,38 @@ int WK_LAST_ERR_CODE = 0;
 
 void chatGptManage()
 {
-  // --  RandomSpeakManage ---
-  if (RANDOM_SPEAK_ON_GET && statusMode != STM_SYSINFO)
+  // --  selfTalkManage ---
+  if (SELF_TALK_ON_GET && statusMode != STM_SYSINFO)
   {
-    RANDOM_SPEAK_ON_GET = false;
+    SELF_TALK_ON_GET = false;
 
     timerStop2();
-    if (!RANDOM_SPEAK_STATE)
-      randomSpeak(true);
+    if (!SELF_TALK_STATE)
+      SetSelfTalk(true);
   }
 
-  if (RANDOM_SPEAK_OFF_GET)
+  if (SELF_TALK_OFF_GET)
   {
-    RANDOM_SPEAK_OFF_GET = false;
+    SELF_TALK_OFF_GET = false;
 
-    if (RANDOM_SPEAK_STATE)
-      randomSpeak(false);
+    if (SELF_TALK_STATE)
+      SetSelfTalk(false);
   }
 
-  if (RANDOM_SPEAK_STATE && (millis() > (RANDOM_TM_LAST + RANDOM_TM)))
+  if (SELF_TALK_STATE && (millis() > (SELF_TALK_LAST_TM + SELF_TALK_NEXT_TM)))
   {
     if (!isTalking())
     {
       int i = GET_ARRAY_SIZE(random_words);
       exec_chatGPT(random_words[random(i)]);
-      setVirtualSelfTalkTime();
+      setVoidSelfTalkTime();
     }
   }
 
   // --- chatGPT REQ ----------
   if (REQ_chatGPT_GET && statusMode != STM_SYSINFO)
   {
-    randomSpeakStop2();
+    StopSelfTalk2();
     timerStop2();
 
     REQ_chatGPT_GET = false;
@@ -76,53 +76,49 @@ void chatGptManage()
 }
 
 
-void wsHandleRandomSpeak(String modeS)
+void wsHandleSelfTalk(String modeS)
 {
-  // if (modeS.equals(""))
-  //   return;
-
   String mode = modeS;
   String SetMode = "";
 
-  mode.toUpperCase();
-  if (mode.equals(String("ON")))
+  if (mode.equalsIgnoreCase("ON"))
   {
-    if (!RANDOM_SPEAK_STATE)
+    if (!SELF_TALK_STATE)
     {
-      RANDOM_SPEAK_ON_GET = true;
+      SELF_TALK_ON_GET = true;
       SetMode = "ON";
     }
   }
-  else if (mode.equals(String("OFF")))
+  else if (mode.equalsIgnoreCase("OFF"))
   {
-    if (RANDOM_SPEAK_STATE)
+    if (SELF_TALK_STATE)
     {
-      RANDOM_SPEAK_OFF_GET = true;
+      SELF_TALK_OFF_GET = true;
       SetMode = "OFF";
     }
   }
-  else if (mode.equals(String("TOGGLE")))
+  else if (mode.equalsIgnoreCase("TOGGLE"))
   {
-    if (!RANDOM_SPEAK_STATE)
+    if (!SELF_TALK_STATE)
     {
-      RANDOM_SPEAK_ON_GET = true;
+      SELF_TALK_ON_GET = true;
       SetMode = "ON";
     }
-    else if (RANDOM_SPEAK_STATE)
+    else if (SELF_TALK_STATE)
     {
-      RANDOM_SPEAK_OFF_GET = true;
+      SELF_TALK_OFF_GET = true;
       SetMode = "OFF";
     }
   }
 
   if (SetMode.equals(""))
   {
-    Serial.println("randomSpeak not set");
+    Serial.println("selfTalk not set");
     return;
   }
   else
   {
-    webpage = "randomSpeak : mode = " + SetMode;
+    webpage = "selfTalk : mode = " + SetMode;
     Serial.println(webpage);
   }
 }
@@ -415,44 +411,45 @@ bool chatDocInit()
   return true;
 }
 
-void randomSpeakStop2()
+void StopSelfTalk2()
 {
-  RANDOM_SPEAK_STATE = false;
-  RANDOM_SPEAK_ON_GET = false;
+  SELF_TALK_STATE = false;
+  SELF_TALK_ON_GET = false;
 }
 
+#define TM_NEXT_SELFTALK 10     //SEC
+#define TM_RND_SELFTALK 10      // SEC
 void setNextSelfTalkTime()
-{ // 前回の話しから、10-20秒後
-  RANDOM_TM_LAST = millis();
-  RANDOM_TM = 1000 * (10 + random(0, 10));
+{ // 前回の話し終了から、10-20秒後に次回に設定する
+  SELF_TALK_LAST_TM = millis();
+  SELF_TALK_NEXT_TM = 1000 * (TM_NEXT_SELFTALK + random(TM_RND_SELFTALK));
 }
 
 
-void setVirtualSelfTalkTime()
-{ // 仮の時間：10分後 --> 実際はWST_TTS_talkDoneで設定される
-  RANDOM_TM_LAST = millis();
-  RANDOM_TM = 10 * 60 * 1000; 
+void setVoidSelfTalkTime()
+{ // 仮の時間：60分後 --> 実際はWST_TTS_talkDoneで設定される
+  SELF_TALK_LAST_TM = millis();
+  SELF_TALK_NEXT_TM = 60 * 60 * 1000; 
 }
 
-void randomSpeak(bool mode)
+void SetSelfTalk(bool mode)
 {
   String speakMsg;
 
   if (mode)
   {
     speakMsg = "独り言始めます。";
-    setVirtualSelfTalkTime();
-    RANDOM_SPEAK_STATE = true;
+    setVoidSelfTalkTime();
+    SELF_TALK_STATE = true;
   }
   else
   {
     speakMsg = "独り言やめます。";
-    RANDOM_SPEAK_STATE = false;
+    SELF_TALK_STATE = false;
   }
 
-  RANDOM_SPEAK_ON_GET = false;
-  RANDOM_SPEAK_OFF_GET = false;
-  // stackchanReq(speakMsg);
+  SELF_TALK_ON_GET = false;
+  SELF_TALK_OFF_GET = false;
   stackchanReq(speakMsg, EXPR_HAPPY, speakMsg, EXPR_NEUTRAL);
 }
 
@@ -467,7 +464,7 @@ bool setChatDoc(const String &data)
   return true;
 }
 
-#define TIMEOUT_CHATGPT 15000 // 15000 mSec ---> 15 Sec
+#define TIMEOUT_CHATGPT 15000     // 15000 mSec ---> 15 Sec
 String https_post_json(const char *url, const char *json_string, const char *root_ca)
 {
   WK_ERR_NO = 0;

@@ -44,7 +44,7 @@ extern const Expression expr_table[];
 extern int REQ_EXPR_AFTER;
 extern void setAvatarExpr(int expr);
 extern void setNextSelfTalkTime();
-extern bool RANDOM_SPEAK_STATE;
+extern bool SELF_TALK_STATE;
 
 // -----------------------------------------------------
 void stateManage();

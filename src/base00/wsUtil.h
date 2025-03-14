@@ -46,7 +46,7 @@ extern void sendReq2(int reqNo, const String reqString );
 extern const String WSS_NAME;
 extern const String WSS_SD_BIN;
 extern  void timerStop2(); 
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern void sendReq( int reqNo);
 extern void sendReq2( int reqNo, const String reqString );
 extern void avatarResume();

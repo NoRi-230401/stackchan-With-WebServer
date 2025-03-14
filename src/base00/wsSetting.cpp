@@ -7,7 +7,7 @@ const String APIKEY_TXT_SD = "/apikey.txt";
 const String STARTUP_SPIFFS = "/wsStartup.json";
 const String OffOn[] = {"off", "on"};
 const String jsonAPIKEY = "{\"apikey\":[{\"openAiApiKey\":\"***\",\"voicevoxApiKey\":\"***\"}]}";
-const String jsonSTARTUP = "{\"startup\":[{\"serverName\":\"stackchan\",\"vSpkNo\":\"3\",\"volume\":\"180\",\"led\":\"on\",\"randomSpeak\":\"off\",\"toneMode\":\"1\",\"mute\":\"off\",\"keyLock\":\"off\",\"timer\":\"180\"}]}";
+const String jsonSTARTUP = "{\"startup\":[{\"serverName\":\"stackchan\",\"vSpkNo\":\"3\",\"volume\":\"180\",\"led\":\"on\",\"selfTalk\":\"off\",\"toneMode\":\"1\",\"mute\":\"off\",\"keyLock\":\"off\",\"timer\":\"180\"}]}";
 
 String SYSINFO_MSG = "";
 String IP_ADDR = "";
@@ -35,8 +35,8 @@ void startupSetting00()
   MUTE_ON_STATE = false;
   KEYLOCK_STATE = false;
   TTS_vSpkNo = TTS_VSPKNO_INIT;
-  RANDOM_SPEAK_ON_GET = false;
-  RANDOM_SPEAK_STATE = false;
+  SELF_TALK_ON_GET = false;
+  SELF_TALK_STATE = false;
   TM_SEC_VAL = 180;
 }
 
@@ -252,7 +252,7 @@ void wsHandleSetting(String volumeS, String volumeDS, String vSpkNoS,
 }
 
 void wsHandleStartup(String serverNameS, String volumeS, String ledS, String toneModeS,
-                     String muteS, String keyLockS, String vSpkNoS, String randomSpeakS,
+                     String muteS, String keyLockS, String vSpkNoS, String selfTalkS,
                      String timerS, String txS)
 {
   DynamicJsonDocument startupJson(STARTUPJSON_SIZE);
@@ -316,10 +316,10 @@ void wsHandleStartup(String serverNameS, String volumeS, String ledS, String ton
     return;
   }
 
-  if (randomSpeakS != "")
+  if (selfTalkS != "")
   {
-    if (setStartup("randomSpeak", randomSpeakS, startupJson))
-      webpage = "wsSetting.Json : randomSpeak = " + randomSpeakS;
+    if (setStartup("selfTalk", selfTalkS, startupJson))
+      webpage = "wsSetting.Json : selfTalk = " + selfTalkS;
     return;
   }
 
@@ -623,9 +623,9 @@ void nvsSaveAll()
   if (KEYLOCK_STATE)
     keylock_onoff = 1;
 
-  uint8_t randomSpeak_onoff = 0;
-  if (RANDOM_SPEAK_STATE)
-    randomSpeak_onoff = 1;
+  uint8_t selfTalk_onoff = 0;
+  if (SELF_TALK_STATE)
+    selfTalk_onoff = 1;
 
   uint32_t nvs_handle;
   if (ESP_OK == nvs_open("setting", NVS_READWRITE, &nvs_handle))
@@ -638,7 +638,7 @@ void nvsSaveAll()
     nvs_set_u8(nvs_handle, "led", led_onoff);
     nvs_set_u8(nvs_handle, "mute", mute_onoff);
     nvs_set_u8(nvs_handle, "keyLock", keylock_onoff);
-    nvs_set_u8(nvs_handle, "randomSpeak", randomSpeak_onoff);
+    nvs_set_u8(nvs_handle, "selfTalk", selfTalk_onoff);
   }
   nvs_close(nvs_handle);
 }
@@ -830,14 +830,14 @@ bool startupFileRead()
     cnt++;
   }
 
-  // randomSpeak
-  String getStr5 = object["randomSpeak"];
+  // selfTalk
+  String getStr5 = object["selfTalk"];
   if ((getStr5 != "") && (getStr5 != "***") && (getStr5 != "null"))
   {
     String getData = getStr5;
     if (getData.equalsIgnoreCase("on"))
-      RANDOM_SPEAK_ON_GET = true;
-    Serial.println("Startup : randomSpeak = " + getStr5);
+      SELF_TALK_ON_GET = true;
+    Serial.println("Startup : selfTalk = " + getStr5);
     cnt++;
   }
   else
@@ -845,14 +845,14 @@ bool startupFileRead()
     uint32_t nvs_handle;
     if (ESP_OK == nvs_open("setting", NVS_READONLY, &nvs_handle))
     {
-      uint8_t randomSpeak_onoff = 0;
-      nvs_get_u8(nvs_handle, "randomSpeak", &randomSpeak_onoff);
+      uint8_t selfTalk_onoff = 0;
+      nvs_get_u8(nvs_handle, "selfTalk", &selfTalk_onoff);
       nvs_close(nvs_handle);
-      if (randomSpeak_onoff == 1)
+      if (selfTalk_onoff == 1)
       {
-        RANDOM_SPEAK_ON_GET = true;
+        SELF_TALK_ON_GET = true;
       }
-      Serial.println("Startup : NVS randomSpeak = " + OffOn[randomSpeak_onoff]);
+      Serial.println("Startup : NVS selfTalk = " + OffOn[selfTalk_onoff]);
       cnt++;
     }
   }

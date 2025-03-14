@@ -72,9 +72,9 @@ void setupApiHandler()
     server.on("/role_get", HTTP_GET, [](AsyncWebServerRequest *request)
             { handle_role_get(request);  serverSend(request); });
 
-  // ##################### randomSpeak ############################
-  server.on("/randomSpeak", HTTP_GET, [](AsyncWebServerRequest *request)
-            { handle_randomSpeak(request);   serverSend(request); });
+  // ##################### selfTalk ############################
+  server.on("/selfTalk", HTTP_GET, [](AsyncWebServerRequest *request)
+            { handle_selfTalk(request);   serverSend(request); });
 
   // ##################### timer ############################
   server.on("/timer", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -252,12 +252,12 @@ void handle_role_get(AsyncWebServerRequest *request)
   wsHandleRoleGet();
 }
 
-void handle_randomSpeak(AsyncWebServerRequest *request)
+void handle_selfTalk(AsyncWebServerRequest *request)
 {
   tone(2);
   webpage = "NG";
   String modeS = request->arg("mode");
-  wsHandleRandomSpeak(modeS);
+  wsHandleSelfTalk(modeS);
 }
 
 void handle_wifiSetting(AsyncWebServerRequest *request)
@@ -293,14 +293,14 @@ void handle_startupSetting(AsyncWebServerRequest *request)
   String vSpkNoS = request->arg("vSpkNo");
   String volumeS = request->arg("volume");
   String ledS = request->arg("led");
-  String randomSpeakS = request->arg("randomSpeak");
+  String selfTalkS = request->arg("selfTalk");
   String toneModeS = request->arg("toneMode");
   String muteS = request->arg("mute");
   String keyLockS = request->arg("keyLock");
   String timerS = request->arg("timer");
   String txS = request->arg("tx");
   wsHandleStartup(serverNameS,volumeS, ledS, toneModeS,muteS,
-   keyLockS, vSpkNoS, randomSpeakS, timerS, txS );
+   keyLockS, vSpkNoS, selfTalkS, timerS, txS );
 }
 
 void handle_servoSetting(AsyncWebServerRequest *request)

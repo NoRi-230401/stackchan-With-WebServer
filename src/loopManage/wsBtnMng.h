@@ -25,13 +25,13 @@
 extern AudioGeneratorMP3 *mp3;
 extern String webpage;
 extern bool TM_STARTED;
-extern bool RANDOM_SPEAK_STATE;
-extern bool RANDOM_SPEAK_ON_GET;
-extern bool RANDOM_SPEAK_OFF_GET;
+extern bool SELF_TALK_STATE;
+extern bool SELF_TALK_ON_GET;
+extern bool SELF_TALK_OFF_GET;
 
 extern void BoxServoDo();
 extern void timerStop2(); 
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern void timerStart();
 extern void timerStop();
 // extern void sysInfoDispStart(uint8_t mode_no);

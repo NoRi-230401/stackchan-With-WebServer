@@ -28,14 +28,14 @@
 
 extern String STT_API_KEY;
 extern String OPENAI_API_KEY;
-extern bool RANDOM_SPEAK_STATE;
+extern bool SELF_TALK_STATE;
 extern const char* root_ca_openai;
 extern int SV_MD;
 extern bool SV_USE;
-extern int RANDOM_TM;
+extern int SELF_TALK_NEXT_TM;
 using namespace m5avatar;
 extern Avatar avatar;
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern void tone(int toneMode);
 extern bool isTalking();
 //--------------------------------------------

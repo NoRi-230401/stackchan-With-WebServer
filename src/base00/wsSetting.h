@@ -23,16 +23,16 @@ extern String SERVER_NAME;
 extern void BoxTouchSetup();
 extern bool KEYLOCK_STATE;
 // extern bool SYSINFO_DISP_STATE;
-extern bool RANDOM_SPEAK_STATE;
+extern bool SELF_TALK_STATE;
 extern uint8_t TTS_vSpkNo;
 
 extern bool LED_OnOff_STATE;
-extern bool RANDOM_SPEAK_ON_GET;
+extern bool SELF_TALK_ON_GET;
 extern uint16_t TM_SEC_VAL;
 extern bool TM_STARTED;
 extern void ledClearAll();
 extern void timerStop2();
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern void timerStart();
 extern void timerStop();
 extern void timerStop2();
@@ -73,7 +73,7 @@ void wsHandleSetting(String volumeS, String volumeDS, String speakerS,
                      String ledS, String muteS, String keyLockS, String toneModeS);
 void wsHandleStartup(String serverNameS, String volumeS, String ledS,
                      String toneModeS, String muteS, String keyLockS, String vSpeakerNoS,
-                     String randomSpeakS, String timerS, String txS);
+                     String selfTalkS, String timerS, String txS);
 void wsHandleApikeySetting(String openAiS, String voicevoxS, String txS);
 void M5StackConfig01();
 void M5StackConfig02();

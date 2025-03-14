@@ -19,7 +19,7 @@ void stateManage()
   case WST_chatGPT_exit:
     log_free_size("chatGPT exit ");
     showExeTime("chatGPT exit : ");
-    if (RANDOM_SPEAK_STATE == true)
+    if (SELF_TALK_STATE == true)
       setNextSelfTalkTime();
     WST = WST_LOOP;
     return;
@@ -34,7 +34,7 @@ void stateManage()
   case WST_TTS_exit:
     log_free_size("TTS exit : ");
     showExeTime("TTS exit : ");
-    if (RANDOM_SPEAK_STATE == true)
+    if (SELF_TALK_STATE == true)
       setNextSelfTalkTime();
     WST = WST_LOOP;
     return;
@@ -47,7 +47,7 @@ void stateManage()
       avatar.setExpression(expr_table[REQ_EXPR_AFTER]);
     REQ_EXPR_AFTER = -1;
 
-    if (RANDOM_SPEAK_STATE == true)
+    if (SELF_TALK_STATE == true)
       setNextSelfTalkTime();
 
     log_free_size("VOICEVOX : OUT");

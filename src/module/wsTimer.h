@@ -29,7 +29,7 @@ extern int statusMode;
 // extern void sysInfoDispEnd();
 extern void stackchanReq(const String& speakStr, int expr=-1, const String balloonStr="$$SKIP$$", int afterExpr=-1 );
 extern String webpage;
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern bool isTalking();
 extern void ledMoveSec(uint16_t sec);
 void ledClearAll();

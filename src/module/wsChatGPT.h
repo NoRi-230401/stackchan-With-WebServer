@@ -95,7 +95,7 @@ extern int BTN_REQ;
 
 // -----------------------------------------------------------------------------
 void chatGptManage();
-void wsHandleRandomSpeak(String modeS);
+void wsHandleSelfTalk(String modeS);
 void wsHandelChat(String textS, String voiceS);
 void wsHandelChatGpt(String historyS,String charaS,String talkToS);
 void wsHandelChatCharacter(String ch_NoS,String ch_nameS, String ch_voiceS,String ch_rollS);
@@ -103,8 +103,8 @@ bool initCharaJson(DynamicJsonDocument &charaJson);
 void wsHandleRoleSet(String roleS);
 void wsHandleRoleGet();
 bool chatDocInit();
-void randomSpeakStop2();
-void randomSpeak(bool mode);
+void StopSelfTalk2();
+void SetSelfTalk(bool mode);
 bool setChatDoc(const String& data);
 
 String https_post_json(const char *url, const char *json_string, const char *root_ca);
@@ -114,7 +114,7 @@ bool saveChatDoc();
 void chatGptSetup();
 void chatHistoryCls();
 void setNextSelfTalkTime();
-void setVirtualSelfTalkTime();
+void setVoidSelfTalkTime();
 
 // ---- -------------end of < WS_CHATGPT_H > --------------------------------------
 #endif

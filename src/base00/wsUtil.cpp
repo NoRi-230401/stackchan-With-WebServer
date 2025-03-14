@@ -360,7 +360,7 @@ void wsHandleSdupdater(String saveFileName)
   if (saveFileName != "")
     flname = saveFileName;
 
-  randomSpeakStop2();
+  StopSelfTalk2();
   timerStop2();
   webpage = "save bin file to SD  -->  " + flname;
   Serial.println(webpage);

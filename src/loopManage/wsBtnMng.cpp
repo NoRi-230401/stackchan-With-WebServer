@@ -230,10 +230,10 @@ void BtnA_Do()
   {
   case STM0X_NONE:
   case STM1X_LINE:
-    if (!RANDOM_SPEAK_STATE)
-      RANDOM_SPEAK_ON_GET = true;
+    if (!SELF_TALK_STATE)
+      SELF_TALK_ON_GET = true;
     else
-      RANDOM_SPEAK_OFF_GET = true;
+      SELF_TALK_OFF_GET = true;
     break;
 
   case STM3X_SETTING:
@@ -281,7 +281,7 @@ void BtnC_Do()
   case STM1X_LINE:
     if (!TM_STARTED)
     { // ---- Timer 開始 ------
-      randomSpeakStop2();
+      StopSelfTalk2();
       TM_GO_GET = true;
       TM_STOP_GET = false;
     }

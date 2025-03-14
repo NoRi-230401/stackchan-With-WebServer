@@ -66,7 +66,6 @@
 #define BtnREQ_BOX_SERVO 4
 #define BtnREQ_BOX_STT 5
 
-// extern bool REQ_chatGPT_GET;
 extern int SV_MD;
 extern int SV_HOME_X;
 extern int SV_HOME_Y;
@@ -76,7 +75,6 @@ extern int SV_PREV_PT_X;
 extern int SV_PREV_PT_Y;
 extern int SV_NEXT_PT_X;
 extern int SV_NEXT_PT_Y;
-// extern bool SV_MD_RANDOM_1st;
 extern int SV_SWING_CNT;
 extern int SV_SWING_AXIS;
 extern int SV_SWING_LEN;
@@ -101,12 +99,11 @@ extern bool LED_OnOff_STATE;
 extern void ledClearAll();
 extern void tone(int);
 extern bool sysInfoGet(String txArg, String &txData);
-extern void sysInfoDispEnd();
+// extern void sysInfoDispEnd();
 extern String SYSINFO_MSG;
 extern void sysInfoDispMake(uint8_t mode_no);
-// extern void sysInfoDispStart(uint8_t mode_no);
-extern bool RANDOM_SPEAK_STATE;
-extern bool RANDOM_SPEAK_ON_GET;
+extern bool SELF_TALK_STATE;
+extern bool SELF_TALK_ON_GET;
 
 extern void wsHandleSpeech(String sayS, String expressionS, String balloonS, String voiceS, String afterExpS);
 extern void timerStop2();
@@ -120,7 +117,7 @@ extern bool getStartup(String item, String &data, DynamicJsonDocument &startupJs
 extern bool setStartup(String item, String data, DynamicJsonDocument &startupJson);
 extern bool initWifiJson(DynamicJsonDocument &wifiJson);
 extern void wsHandleStartup(String serverNameS, String volumeS, String ledS, String toneModeS,
-   String muteS, String keyLockS, String vSpeakerNoS, String randomSpeakS,
+   String muteS, String keyLockS, String vSpeakerNoS, String selfTalkS,
    String timerS, String txS);
 extern void wsHandleApikeySetting(String openAiS, String voicevoxS,String txS);
 extern void wsHandleSetting(String volumeS, String volumeDS, String speakerS, String ledS, String muteS, String keyLockS, String toneModeS);
@@ -137,7 +134,7 @@ extern void wsHandleBalloon(String text);
 extern void wsHandelChat(String textS, String voiceS);
 extern void wsHandelChatCharacter(String ch_NoS,String ch_nameS, String ch_voiceS,String ch_rollS);
 extern void wsHandelChatGpt(String historyS,String charaS,String talkToS);
-extern void wsHandleRandomSpeak(String modeS);
+extern void wsHandleSelfTalk(String modeS);
 extern void wsServoSetting(String txS,String servoS, String servoPortS,
       String servoModeS, String servoHomeXS, String servoHomeYS);
 extern void wsHandleSdupdater(String saveFileName);
@@ -147,7 +144,7 @@ extern Avatar avatar;
 extern bool TM_STOP_GET;
 extern bool TM_GO_GET;
 extern bool TM_STARTED;
-extern void randomSpeakStop2();
+extern void StopSelfTalk2();
 extern void timerStart();
 extern void chatHistoryCls();
 extern void wsHandleWifiSetting(String initS, String ssidS, String passwdS,String removeS,
@@ -162,7 +159,7 @@ void setupApiHandler();
 void handle_button(AsyncWebServerRequest *request);
 void handle_setting(AsyncWebServerRequest *request);
 void handle_sysInfo(AsyncWebServerRequest *request);
-void handle_randomSpeak(AsyncWebServerRequest *request);
+void handle_selfTalk(AsyncWebServerRequest *request);
 void handle_servo(AsyncWebServerRequest *request);
 void handle_servoSetting(AsyncWebServerRequest *request);
 void handle_apikeySetting(AsyncWebServerRequest *request);

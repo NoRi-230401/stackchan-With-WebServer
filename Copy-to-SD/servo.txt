@@ -1,0 +1,3 @@
+USE_SERVO "on" or "off"
+SERVO_PIN_X
+SERVO_PIN_Y

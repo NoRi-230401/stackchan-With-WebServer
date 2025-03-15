@@ -193,18 +193,6 @@ void handle_speech(AsyncWebServerRequest *request)
   wsHandleSpeech(sayS, expressionS, balloonS, voiceS, afterExpS);
 }
 
-// // chatHistory etc, utility for chatGpt -----------
-// void handle_chatGpt(AsyncWebServerRequest *request)
-// {
-//   tone(2);
-//   webpage = "NG";
-//   String historyS = request->arg("history");
-//   String charaS = request->arg("chara");
-  
-//   wsHandelChatGpt(historyS,charaS);
-// }
-
-// chatHistory etc, utility for chatGpt -----------
 void handle_chatGpt(AsyncWebServerRequest *request)
 {
   tone(2);

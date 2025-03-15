@@ -43,7 +43,7 @@ extern String REQ_MSG;
 extern String webpage;
 extern void sendReq(int reqNo);
 extern void sendReq2(int reqNo, const String reqString );
-extern const String WSS_NAME;
+extern const String SWW_NAME;
 extern const String WSS_SD_BIN;
 extern  void timerStop2(); 
 extern void StopSelfTalk2();

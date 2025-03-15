@@ -13,7 +13,7 @@ extern AsyncWebServer server;
 extern String IP_ADDR;
 extern String SERVER_NAME;
 extern uint8_t VOLUME_VALUE;
-extern const String WSS_VERSION;
+extern const String SWW_VERSION;
 extern String webpage;
 extern const String FLS_NAME[];
 extern int isSPIFFS;

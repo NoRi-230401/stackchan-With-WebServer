@@ -2,93 +2,80 @@
 #include "wsUser.h"
 
 String SERVER_NAME = "stackchan";
-const String SAPP1_HTML = "/sApp1.html";
-const String SAPP2_HTML = "/sApp2.html";
-const String SAPP3_HTML = "/sApp3.html";
-const String SAPP4_HTML = "/sApp4.html";
-const String SAPP5_HTML = "/sApp5.html";
-const String SCRIPT_JS = "/script.js";
+const String sAPP1_HTML = "/sApp1.html";
+const String sAPP2_HTML = "/sApp2.html";
+const String sAPP3_HTML = "/sApp3.html";
+const String sAPP4_HTML = "/sApp4.html";
+const String sAPP5_HTML = "/sApp5.html";
+const String sSCRIPT_JS = "/sScript.js";
+const String sSTYLE_CSS = "/sStyle.css";
+const String sICON_GIF = "/sIcon.gif";
 const String NAME_sAPP1 = "Setting";
 const String NAME_sAPP2 = "Servo";
 const String NAME_sAPP3 = "Remote";
 const String NAME_sAPP4 = "Chat";
 const String NAME_sAPP5 = "APP5";
+const String GITHUB_URL = "https://github.com/NoRi-230401/stackchan-With-WebServer";
 
-String scriptPage = "";
+
+
+// String scriptPage = "";
 
 void setupUserHandler()
 {
-  // #########################################################################
+  // ##### System App #################################################
   //  --- sAPP1-5 html -----
-  // server.on("/sApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp1();  request->send(200, "text/html", webpage); });
+  server.on(sAPP1_HTML.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sAPP1_HTML);  request->send(200, "text/html", webpage); });
 
-  // server.on("/sApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp2();  request->send(200, "text/html", webpage); });
+  server.on(sAPP2_HTML.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sAPP2_HTML);  request->send(200, "text/html", webpage); });
 
-  // server.on("/sApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp3();  request->send(200, "text/html", webpage); });
+  server.on(sAPP3_HTML.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sAPP3_HTML);  request->send(200, "text/html", webpage); });
 
-  // server.on("/sApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp4();  request->send(200, "text/html", webpage); });
+  server.on(sAPP4_HTML.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sAPP4_HTML);  request->send(200, "text/html", webpage); });
 
-  // server.on("/sApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/sAppt5.html", String(), false, processor05); });
+  server.on(sAPP5_HTML.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sAPP5_HTML);  request->send(200, "text/html", webpage); });
 
-  // #########################################################################
-  //  --- sAPP1-5 html -----
-  server.on("/sApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sApp1.html");  request->send(200, "text/html", webpage); });
+  // --------------------------------------------------------------------
+  server.on(sSCRIPT_JS.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP(sSCRIPT_JS); request->send(200,"application/javascript", webpage); });
 
-  server.on("/sApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sApp2.html");  request->send(200, "text/html", webpage); });
+  server.on(sSTYLE_CSS.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, sSTYLE_CSS.c_str(), "text/css"); });
 
-  server.on("/sApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sApp3.html");  request->send(200, "text/html", webpage); });
+  server.on(sICON_GIF.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, sICON_GIF.c_str(), "image/gif"); });
 
-  server.on("/sApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sApp4.html");  request->send(200, "text/html", webpage); });
-
-  server.on("/sApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sApp5.html");  request->send(200, "text/html", webpage); });
-
-  // #########################################################################
-  server.on("/sScript.js", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/sScript.js"); request->send(200,"application/javascript", webpage); });
-
-  server.on("/sStyle.css", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/sStyle.css", "text/css"); });
-
-  server.on("/icon.gif", HTTP_GET, [](AsyncWebServerRequest *request)
-           { request->send(SPIFFS, "/icon.gif", "image/gif"); });
-
-
-  // #########################################################################
+  // ##### User App #####################################################
   //  --- uAPP1-5 html -----
   // server.on("/uApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp1();  request->send(200, "text/html", webpage); });
+  //           { convIP("/uApp1.html");  request->send(200, "text/html", webpage); });
 
   // server.on("/uApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp2();  request->send(200, "text/html", webpage); });
+  //           { convIP("/uApp2.html");  request->send(200, "text/html", webpage); });
 
   // server.on("/uApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp3();  request->send(200, "text/html", webpage); });
+  //           { convIP("/uApp3.html");  request->send(200, "text/html", webpage); });
 
   // server.on("/uApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_sApp4();  request->send(200, "text/html", webpage); });
+  //           { convIP("/uApp4.html");  request->send(200, "text/html", webpage); });
 
   // server.on("/uApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
   //           { request->send(SPIFFS, "/sAppt5.html", String(), false, processor05); });
-  // #########################################################################
-  // server.on("/icon.gif", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/icon.gif", "image/gif"); });
+  // // ----------------------------------------------------------------------
+  // server.on("/uScript.js", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { convIP("/sScript.js"); request->send(200,"application/javascript", webpage); });
 
-  // server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { handle_script(); request->send(200,"application/javascript",scriptPage); });
-
-  // server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
+  // server.on("/uStyle.css", HTTP_GET, [](AsyncWebServerRequest *request)
   //           { request->send(SPIFFS, "/style.css", "text/css"); });
-  // ###########################################################################
+
+  // server.on("/uIcon.gif", HTTP_GET, [](AsyncWebServerRequest *request)
+  //           { request->send(SPIFFS, "/uIcon.gif", "image/gif"); });
+  // ######################################################################
 }
 
 void serverSend(AsyncWebServerRequest *request)
@@ -126,82 +113,6 @@ void serverSend3(AsyncWebServerRequest *request)
     webpage = tmpPage;
     request->send(200, "text/html", webpage);
   }
-}
-
-void handle_sApp1()
-{
-  convIP(SAPP1_HTML);
-}
-
-void handle_sApp2()
-{
-  convIP(SAPP2_HTML);
-}
-
-void handle_sApp3()
-{
-  convIP(SAPP3_HTML);
-}
-
-void handle_sApp4()
-{
-  convIP(SAPP4_HTML);
-}
-
-void handle_sApp5()
-{
-  convIP(SAPP5_HTML);
-}
-
-void handle_script()
-{
-  scriptConv(SCRIPT_JS);
-}
-
-bool scriptConv(const String flname)
-{
-  // *************************************************************
-  // "script.js" ファイル中の  "http://stackchan/"  を実際のIPアドレスに変換
-  const char *findStr = "http://stackchan/";
-  // *************************************************************
-  scriptPage = "";
-
-  File fl = SPIFFS.open(flname.c_str(), "r");
-  if (!fl)
-  {
-    fl.close();
-    String msg = "Error handleRoot : cannot open " + flname;
-    scriptPage = msg;
-    Serial.println(msg);
-    return false;
-  }
-
-  // *** Buffer確保 ******
-  size_t sz = fl.size();
-  Serial.println(flname + " :  file size = " + String(sz, DEC));
-
-  char *buff;
-  buff = (char *)malloc(sz + 1);
-  if (!buff)
-  {
-    String msg = "ERROR:  Unable to malloc " + String(sz, DEC) + " bytes for app";
-    scriptPage = String(msg);
-    Serial.println(msg);
-    fl.close();
-    return false;
-  }
-
-  fl.read((uint8_t *)buff, sz);
-  buff[sz] = 0;
-  fl.close();
-
-  scriptPage = String(buff);
-  free(buff);
-
-  // ** 本体のIP_ADDRに変換 **
-  String replacedStr = "http://" + IP_ADDR + "/";
-  scriptPage.replace(findStr, (const char *)replacedStr.c_str());
-  return true;
 }
 
 bool convIP(const String flname)
@@ -258,22 +169,17 @@ String processor05(const String &var)
   // を書き換える。本体の状態をWEB上で表示することができます。
   // **************************************************************************
   Serial.println(var);
-  if (var.equals("IP_ADDR"))
+  if (var.equalsIgnoreCase("IP_ADDR"))
   {
     Serial.println(IP_ADDR);
     return IP_ADDR;
   }
-  else if (var.equals("IP_ADDR"))
-  {
-    Serial.println(IP_ADDR);
-    return IP_ADDR;
-  }
-  else if (var.equals("SERVER_NAME"))
+  else if (var.equalsIgnoreCase("SERVER_NAME"))
   {
     Serial.println(SERVER_NAME);
     return SERVER_NAME;
   }
-  if (var.equals("VOLUME_VALUE"))
+  if (var.equalsIgnoreCase("VOLUME_VALUE"))
   {
     int vol = (int)VOLUME_VALUE;
     String vol_str = String(vol, DEC);
@@ -287,8 +193,8 @@ void Home()
 {
   webpage = HTML_Header();
   webpage += "<br>";
-  webpage += "<img src='icon.gif' alt='icon'>";
-  // webpage += "<img src='icon.gif'>";
+  webpage += "<img src='sIcon.gif' alt='icon'>";
+  // webpage += "<img src='sIcon.gif'>";
   webpage += "<h3>[&nbsp;Home&nbsp;]　" + SERVER_NAME + "　IP=" + IP_ADDR + "</h3>";
   // webpage += "<br>";
   webpage += HTML_Footer();
@@ -340,7 +246,9 @@ String HTML_Header()
   page += "<body>";
 
   page += "<div class = 'topnav'>";
-  page += "<a href='/dir'>Dir</a> ";
+  page += "<a href='/' target='Home'>Home</a>";
+  // page += "<a href='/dir'>Dir</a> ";
+  page += "<a href='/dir'>Files</a> ";
   page += "<a href='/upload'>Upload</a> ";
   // page += "<a href='/download'>Download</a> ";
   // page += "<a href='/stream'>Stream</a> ";
@@ -363,14 +271,15 @@ String HTML_Header()
   // page += "<br>";
   page += "<br><br>";
   page += "<div class = 'topnav2'>";
-  page += "<a href='/' target='Home'>Home</a>";
+  // page += "<a href='/' target='Home'>Home</a>";
   page += "<a href='/sApp1.html' target='" + NAME_sAPP1 + "'>" + NAME_sAPP1 + "</a> ";
   page += "<a href='/sApp2.html' target='" + NAME_sAPP2 + "'>" + NAME_sAPP2 + "</a> ";
   page += "<a href='/sApp3.html' target='" + NAME_sAPP3 + "'>" + NAME_sAPP3 + "</a> ";
   page += "<a href='/sApp4.html' target='" + NAME_sAPP4 + "'>" + NAME_sAPP4 + "</a> ";
   // page += "<a href='/wss5'>" + NAME_sAPP5 + "</a> ";
-  page += "<a href='/system'>Status</a>";
-  page += "<a href='https://nori.rdy.jp/wss/' target='WSS-Support'>Support</a>";
+  // page += "<a href='/system'>Status</a>";
+  // page += "<a href='https://github.com/NoRi-230401/stackchan-With-WebServer' target='Support'>Support</a>";
+  page += "<a href="+ GITHUB_URL + " target='Support'>Support</a>";
   page += "</div>";
   page += "<br><br>";
 
@@ -384,7 +293,7 @@ String HTML_Footer()
   page += "<br>";
   page += "<footer>";
   page += "<p class='medium'>" + SERVER_NAME + " is a super-kawaii robot.</p>";
-  page += "<p class='ps'><i> " + WSS_VERSION + "</i></p>";
+  page += "<p class='ps'><i> " + SWW_VERSION + "</i></p>";
   page += "</footer>";
   page += "<br>";
   page += "</body>";

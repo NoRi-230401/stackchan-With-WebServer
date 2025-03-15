@@ -72,7 +72,7 @@ bool sysInfoGet(String txArg, String &txData)
 
   if (txArg.equalsIgnoreCase("version"))
   {
-    txData = WSS_VERSION;
+    txData = SWW_VERSION;
   }
   else if (txArg.equalsIgnoreCase("IP_Addr"))
   {
@@ -270,8 +270,8 @@ void sysInfo_m00_DispMake()
   String page = "[1/" + String(STM2X_SYSINFO_LEN, DEC) + "] ";
   SYSINFO_MSG = page + " -  SYSTEM Info  -\n";
 
-  SYSINFO_MSG += WSS_NAME;
-  SYSINFO_MSG += "\n" + WSS_VER;
+  SYSINFO_MSG += SWW_NAME;
+  SYSINFO_MSG += "\n" + SWW_VER;
   SYSINFO_MSG += "\n\nIP = " + IP_ADDR;
   SYSINFO_MSG += "\nSSID = " + SSID;
   SYSINFO_MSG += "\nserverName = " + SERVER_NAME;

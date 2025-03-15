@@ -4,7 +4,7 @@
 // -------------------------------------------------------
 #include <Arduino.h>
 
-extern const String WSS_VERSION;
+extern const String SWW_VERSION;
 extern void M5StackConfig01();
 extern void M5StackConfig02();
 extern void M5SpeakerConfig();
@@ -58,10 +58,10 @@ extern uint16_t WST ;
 extern void stateManage();
 extern void EPS32_system_info(void);
 // ----------------------------------------------------------
-extern const String WSS_NAME;
+extern const String SWW_NAME;
 extern const String WSS_SD_BIN;
-extern const String WSS_VER;
-extern const String WSS_VERSION;
+extern const String SWW_VER;
+extern const String SWW_VERSION;
 
 // extern String webpage;
 

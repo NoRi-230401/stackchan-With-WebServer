@@ -342,7 +342,7 @@ void SDU_fromSD()
 #define SDU_SKIP_TMR 5000 // skip timer : ms
 void SDU_lobby()
 {
-  SDUCfg.setAppName(WSS_NAME.c_str()); // lobby screen label: application name
+  SDUCfg.setAppName(SWW_NAME.c_str()); // lobby screen label: application name
   SDUCfg.setLabelMenu("< Menu");       // BtnA label: load menu.bin
 
   checkSDUpdater(

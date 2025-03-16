@@ -11,12 +11,8 @@
 
 extern AsyncWebServer server;
 extern String IP_ADDR;
-// extern String SERVER_NAME;
-// extern uint8_t VOLUME_VALUE;
-extern const String SWW_VERSION;
+extern const String SWS_VERSION;
 extern String webpage;
-// extern const String FLS_NAME[];
-// extern int isSPIFFS;
 extern String SdPath;
 
 extern const String uAPP1_HTML;
@@ -31,10 +27,6 @@ extern const String NAME_uAPP4;
 extern const String NAME_uAPP5;
 
 // ------------------------------------------------------------
-// void setupSystemAppHandler();
-// String processor05(const String &var);
-// void processor00();
-
 void serverSend(AsyncWebServerRequest *request);
 void serverSend3(AsyncWebServerRequest *request);
 String HTML_Footer();

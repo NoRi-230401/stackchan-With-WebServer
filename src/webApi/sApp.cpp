@@ -18,7 +18,6 @@ const String NAME_sAPP4 = "Chat";
 const String NAME_sAPP5 = "Clock";
 const String GITHUB_URL = "https://github.com/NoRi-230401/stackchan-With-WebServer";
 
-
 void setupSystemAppHandler()
 {
   // ##### System App #################################################
@@ -48,6 +47,8 @@ void setupSystemAppHandler()
   server.on(sICON_GIF.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, sICON_GIF.c_str(), "image/gif"); });
 
+  server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/favicon.ico", "image/x-icon"); });
 }
 
 void serverSend(AsyncWebServerRequest *request)
@@ -243,7 +244,7 @@ String HTML_Footer()
   page += "<br>";
   page += "<footer>";
   page += "<p class='medium'>" + SERVER_NAME + " is a super-kawaii robot.</p>";
-  page += "<p class='ps'><i> " + SWW_VERSION + "</i></p>";
+  page += "<p class='ps'><i> " + SWS_VERSION + "</i></p>";
   page += "</footer>";
   page += "<br>";
   page += "</body>";

@@ -50,7 +50,7 @@ extern void sysInfoDispStart(uint8_t mode_no);
 extern void avatarStop();
 extern void avatarStop2();
 extern void avatarResume();
-extern const String SWW_NAME;
+extern const String SWS_NAME;
 
 // -----------------------------------
 void SDU_disp();

@@ -44,8 +44,8 @@ extern void statusNext();
 extern bool statusLineOneState;
 extern void statusModeSelect();
 
-extern const String SWW_NAME;
-extern const String WSS_SD_BIN;
+extern const String SWS_NAME;
+extern const String SWS_SD_BIN;
 extern void SDU_lobby();
 extern void SDU_fromSD();
 extern void SDU_saveBin(String flname);

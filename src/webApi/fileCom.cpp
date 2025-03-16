@@ -302,10 +302,12 @@ void Handle_File_Rename(AsyncWebServerRequest *request, String filename, int Arg
 }
 
 // #############################################################################################
-//  Not found handler is also the handler for 'delete', 'download' and 'stream' functions
+//  Not found handler is also the handler for 'delete', 'download' functions
 void notFound(AsyncWebServerRequest *request)
 { // Process selected file types
   Serial.println("notFund func in ...");
+  Serial.println("url -> " + request->url());
+  
   String filename;
 
   if (request->url().startsWith("/deletehandler") || request->url().startsWith("/renamehandler"))
@@ -314,6 +316,7 @@ void notFound(AsyncWebServerRequest *request)
   
     if (!request->url().startsWith("/renamehandler"))
       filename = request->url().substring(request->url().indexOf("~/") + 1);
+    
     start = millis();
   
     if (request->url().startsWith("/deletehandler"))
@@ -475,52 +478,52 @@ void Page_Not_Found()
 }
 
 // #############################################################################################
-void Display_System_Info()
-{
-  esp_chip_info_t chip_info;
-  esp_chip_info(&chip_info);
-  if (WiFi.scanComplete() == -2)
-    WiFi.scanNetworks(true, false); // Scan parameters are (async, show_hidden) if async = true, don't wait for the result
-  webpage = HTML_Header();
-  webpage += "<h3>System Information</h3>";
-  webpage += "<h4>Transfer Statistics</h4>";
-  webpage += "<table class='center'>";
-  webpage += "<tr><th>Last Upload</th><th>Last Download/Stream</th><th>Units</th></tr>";
-  webpage += "<tr><td>" + ConvBinUnits(uploadsize, 1) + "</td><td>" + ConvBinUnits(downloadsize, 1) + "</td><td>File Size</td></tr> ";
-  webpage += "<tr><td>" + ConvBinUnits((float)uploadsize / uploadtime * 1024.0, 1) + "/Sec</td>";
-  webpage += "<td>" + ConvBinUnits((float)downloadsize / downloadtime * 1024.0, 1) + "/Sec</td><td>Transfer Rate</td></tr>";
-  webpage += "</table>";
-  webpage += "<h4>SPIFFS Filing System</h4>";
-  webpage += "<table class='center'>";
-  webpage += "<tr><th>Total Space</th><th>Used Space</th><th>Free Space</th><th>Number of Files</th></tr>";
-  webpage += "<tr><td>" + ConvBinUnits(SPIFFS.totalBytes(), 1) + "</td>";
-  webpage += "<td>" + ConvBinUnits(SPIFFS.usedBytes(), 1) + "</td>";
-  webpage += "<td>" + ConvBinUnits(SPIFFS.totalBytes() - SPIFFS.usedBytes(), 1) + "</td>";
+// void Display_System_Info()
+// {
+//   esp_chip_info_t chip_info;
+//   esp_chip_info(&chip_info);
+//   if (WiFi.scanComplete() == -2)
+//     WiFi.scanNetworks(true, false); // Scan parameters are (async, show_hidden) if async = true, don't wait for the result
+//   webpage = HTML_Header();
+//   webpage += "<h3>System Information</h3>";
+//   webpage += "<h4>Transfer Statistics</h4>";
+//   webpage += "<table class='center'>";
+//   webpage += "<tr><th>Last Upload</th><th>Last Download/Stream</th><th>Units</th></tr>";
+//   webpage += "<tr><td>" + ConvBinUnits(uploadsize, 1) + "</td><td>" + ConvBinUnits(downloadsize, 1) + "</td><td>File Size</td></tr> ";
+//   webpage += "<tr><td>" + ConvBinUnits((float)uploadsize / uploadtime * 1024.0, 1) + "/Sec</td>";
+//   webpage += "<td>" + ConvBinUnits((float)downloadsize / downloadtime * 1024.0, 1) + "/Sec</td><td>Transfer Rate</td></tr>";
+//   webpage += "</table>";
+//   webpage += "<h4>SPIFFS Filing System</h4>";
+//   webpage += "<table class='center'>";
+//   webpage += "<tr><th>Total Space</th><th>Used Space</th><th>Free Space</th><th>Number of Files</th></tr>";
+//   webpage += "<tr><td>" + ConvBinUnits(SPIFFS.totalBytes(), 1) + "</td>";
+//   webpage += "<td>" + ConvBinUnits(SPIFFS.usedBytes(), 1) + "</td>";
+//   webpage += "<td>" + ConvBinUnits(SPIFFS.totalBytes() - SPIFFS.usedBytes(), 1) + "</td>";
 
-  webpage += "<td>" + (numfiles == 0 ? "Pending Dir or Empty" : String(numfiles)) + "</td></tr>";
+//   webpage += "<td>" + (numfiles == 0 ? "Pending Dir or Empty" : String(numfiles)) + "</td></tr>";
 
-  webpage += "</table>";
-  webpage += "<h4>CPU Information</h4>";
-  webpage += "<table class='center'>";
-  webpage += "<tr><th>Parameter</th><th>Value</th></tr>";
-  webpage += "<tr><td>Number of Cores</td><td>" + String(chip_info.cores) + "</td></tr>";
-  webpage += "<tr><td>Chip revision</td><td>" + String(chip_info.revision) + "</td></tr>";
-  webpage += "<tr><td>Internal or External Flash Memory</td><td>" + String(((chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "Embedded" : "External")) + "</td></tr>";
-  webpage += "<tr><td>Flash Memory Size</td><td>" + String((spi_flash_get_chip_size() / (1024 * 1024))) + " MB</td></tr>";
-  // webpage += "<tr><td>Current Free RAM</td><td>" + ConvBinUnits(ESP.getFreeHeap(), 1) + "</td></tr>";
-  webpage += "</table>";
-  webpage += "<h4>Network Information</h4>";
-  webpage += "<table class='center'>";
-  webpage += "<tr><th>Parameter</th><th>Value</th></tr>";
-  webpage += "<tr><td>LAN IP Address</td><td>" + String(WiFi.localIP().toString()) + "</td></tr>";
-  webpage += "<tr><td>Network Adapter MAC Address</td><td>" + String(WiFi.BSSIDstr()) + "</td></tr>";
-  webpage += "<tr><td>WiFi SSID</td><td>" + String(WiFi.SSID()) + "</td></tr>";
-  webpage += "<tr><td>WiFi RSSI</td><td>" + String(WiFi.RSSI()) + " dB</td></tr>";
-  webpage += "<tr><td>WiFi Channel</td><td>" + String(WiFi.channel()) + "</td></tr>";
-  webpage += "<tr><td>WiFi Encryption Type</td><td>" + String(EncryptionType(WiFi.encryptionType(0))) + "</td></tr>";
-  webpage += "</table> ";
-  webpage += HTML_Footer();
-}
+//   webpage += "</table>";
+//   webpage += "<h4>CPU Information</h4>";
+//   webpage += "<table class='center'>";
+//   webpage += "<tr><th>Parameter</th><th>Value</th></tr>";
+//   webpage += "<tr><td>Number of Cores</td><td>" + String(chip_info.cores) + "</td></tr>";
+//   webpage += "<tr><td>Chip revision</td><td>" + String(chip_info.revision) + "</td></tr>";
+//   webpage += "<tr><td>Internal or External Flash Memory</td><td>" + String(((chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "Embedded" : "External")) + "</td></tr>";
+//   webpage += "<tr><td>Flash Memory Size</td><td>" + String((spi_flash_get_chip_size() / (1024 * 1024))) + " MB</td></tr>";
+//   // webpage += "<tr><td>Current Free RAM</td><td>" + ConvBinUnits(ESP.getFreeHeap(), 1) + "</td></tr>";
+//   webpage += "</table>";
+//   webpage += "<h4>Network Information</h4>";
+//   webpage += "<table class='center'>";
+//   webpage += "<tr><th>Parameter</th><th>Value</th></tr>";
+//   webpage += "<tr><td>LAN IP Address</td><td>" + String(WiFi.localIP().toString()) + "</td></tr>";
+//   webpage += "<tr><td>Network Adapter MAC Address</td><td>" + String(WiFi.BSSIDstr()) + "</td></tr>";
+//   webpage += "<tr><td>WiFi SSID</td><td>" + String(WiFi.SSID()) + "</td></tr>";
+//   webpage += "<tr><td>WiFi RSSI</td><td>" + String(WiFi.RSSI()) + " dB</td></tr>";
+//   webpage += "<tr><td>WiFi Channel</td><td>" + String(WiFi.channel()) + "</td></tr>";
+//   webpage += "<tr><td>WiFi Encryption Type</td><td>" + String(EncryptionType(WiFi.encryptionType(0))) + "</td></tr>";
+//   webpage += "</table> ";
+//   webpage += HTML_Footer();
+// }
 
 // #############################################################################################
 String ConvBinUnits(int bytes, int resolution)
@@ -565,15 +568,3 @@ String EncryptionType(wifi_auth_mode_t encryptionType)
   }
 }
 
-// // #############################################################################################
-// bool StartMDNSservice(const char *Name)
-// {
-//   esp_err_t err = mdns_init(); // Initialise mDNS service
-//   if (err)
-//   {
-//     printf("MDNS Init failed: %d\n", err); // Return if error detected
-//     return false;
-//   }
-//   mdns_hostname_set(Name); // Set hostname
-//   return true;
-// }

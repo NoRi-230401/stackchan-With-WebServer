@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Setting</title>
+  <title>App2</title>
   <base target="StackChanSub">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
@@ -95,7 +95,7 @@
 </head>
 
 <body>
-  <h1>uApp2.html</h1>
+  <h1>App2</h1>
   <br>
   <p>
     "uApp2.html"をSPIFFSにUpload して、http://stackchan/uApp2.html で実行
@@ -117,7 +117,23 @@
   <a href="http://stackchan/selfTalk?mode=toggle" <button class="button">SelfTalk On/Off </button></a>
   <br><br>
   <hr>
+  <h3>User Buttonを使用 </h3>
+  <br>
+  <a href="http://stackchan/uRcv?No=12?msg='Hello stackchan'" <button class="button">User Button(No.12) push! </button></a>
   <br><br>
+  <hr>
+  <br>
+  <form action="http://stackchan/uRcv" method="get">
+      ★番号と文章を送る★<br>
+      番号:( 1-99 ) 　<input type="text" name="No" value="" size="2" maxlength="2" /><br><br>
+      テキスト入力<br>　<textarea rows="6" cols="40" name="msg" wrap="soft"></textarea><br><br>
+      
+      <input type="submit" value="送信" />
+  </form>
+  <br><br>
+
+  
+  <br>
 </body>
 
 </html>

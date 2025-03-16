@@ -1,10 +1,10 @@
 // ---- <main.cpp>-------------------------------------------------------
 #include "main.h"
 
-const String SWW_NAME = "Stackchan-With-WebServer";
-const String SWW_VER = "v401d-250315a";
-const String SWW_VERSION = SWW_NAME + " " + SWW_VER;
-const String WSS_SD_BIN = "/03_stackchanWWS.bin";  // default-SDUpdater-bin-fileName 
+const String SWS_NAME = "Stackchan-with-WebServer";
+const String SWS_VER = "v401e-250316a";
+const String SWS_VERSION = SWS_NAME + " " + SWS_VER;
+const String SWS_SD_BIN = "/03_StackchanWS.bin";
 
 // ---------------------------------------------------------------------
 //  *** Extended from ***
@@ -24,7 +24,7 @@ void setup()
   SDU_lobby();
   M5StackConfig02();
   
-  Serial.println(SWW_VERSION);
+  Serial.println(SWS_VERSION);
   M5LedBegin();
   ledRed();
   M5SpeakerConfig();

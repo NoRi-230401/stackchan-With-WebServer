@@ -30,8 +30,11 @@ extern const String NAME_uAPP5;
 // ------------------------------------------------------------
 void setupSystemAppHandler();
 void setupUserAppHandler();
-String processor05(const String &var);
-void processor00();
+String processorA05(const String &var);
+void processorA02();
+void handle_uRcv(AsyncWebServerRequest *request);
+#define TONE_BTN 1    // 本体ボタンが押下時に音を出す。
+#define TONE_EXTCOM 2 // apiコマンド受信時に音を出す。
 
 extern void serverSend(AsyncWebServerRequest *request);
 extern void serverSend3(AsyncWebServerRequest *request);
@@ -44,7 +47,7 @@ extern String HTML_Header3();
 extern String HTML_Footer3();
 extern void Home();
 extern bool convIP(const String flname);
-
+extern void tone(int);
 
 
 // ---- end of < _UAPP_H > --------------------------------------

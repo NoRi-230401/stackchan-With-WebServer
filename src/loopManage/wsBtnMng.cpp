@@ -273,7 +273,7 @@ void BtnB_Do()
 void BtnC_Do()
 {
   tone(1);
-  String bin_flname = WSS_SD_BIN;
+  String bin_flname = SWS_SD_BIN;
 
   switch (statusMode)
   {

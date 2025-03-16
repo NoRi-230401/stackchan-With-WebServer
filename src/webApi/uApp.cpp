@@ -1,4 +1,7 @@
 // ---------------------------< uApp.cpp >------------------------------------
+// --------------------------------------
+// define user application in this file
+// --------------------------------------
 #include "uApp.h"
 
 // --- User App1 to App5 ------
@@ -21,22 +24,19 @@ void setupUserAppHandler()
   // ##### User App #####################################################
   //  --- uAPP1-5 html -----
   server.on("/uApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(SPIFFS, "/sAppt1.html", String(), false, processor05); });
-
-  // server.on("/uApp1.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { convIP("/uApp1.html");  request->send(200, "text/html", webpage); });
+            { convIP("/uApp1.html");  request->send(200, "text/html", webpage); });
 
   server.on("/uApp2.html", HTTP_GET, [](AsyncWebServerRequest *request)
-            { convIP("/uApp2.html"); processor00();  request->send(200, "text/html", webpage); });
+            { convIP("/uApp2.html"); processorA02();  request->send(200, "text/html", webpage); });
 
   server.on("/uApp3.html", HTTP_GET, [](AsyncWebServerRequest *request)
             { convIP("/uApp3.html");  request->send(200, "text/html", webpage); });
 
-  // server.on("/uApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { convIP("/uApp4.html");  request->send(200, "text/html", webpage); });
+  server.on("/uApp4.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { convIP("/uApp4.html");  request->send(200, "text/html", webpage); });
 
-  // server.on("/uApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
-  //           { request->send(SPIFFS, "/sAppt5.html", String(), false, processor05); });
+  server.on("/uApp5.html", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send(SPIFFS, "/sAppt5.html", String(), false, processorA05); });
 
   // ----------------------------------------------------------------------
   server.on(uSCRIPT_JS.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
@@ -47,10 +47,15 @@ void setupUserAppHandler()
 
   server.on(uICON_GIF.c_str(), HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send(SPIFFS, uICON_GIF.c_str(), "image/gif"); });
-  // ######################################################################
+
+  // ----------------------------------------------------------------------
+  // ##################### User Button ############################
+  server.on("/uRcv", HTTP_GET, [](AsyncWebServerRequest *request)
+            { handle_uRcv(request); serverSend(request); });
+
 }
 
-void processor00()
+void processorA02()
 {
   String findStr1 = "%IP_ADDR%";
   String replacedStr1 = IP_ADDR;
@@ -66,7 +71,7 @@ void processor00()
   // Serial.println(webpage);
 }
 
-String processor05(const String &var)
+String processorA05(const String &var)
 {
   // ********************* SAMPLE : 本体の内容をWEBに表示　********************
   // Htmlファイル内の %IP_ADDR% , %SERVER_NAME%, %VOLUME_VALUE% に指定された箇所
@@ -90,5 +95,38 @@ String processor05(const String &var)
     return vol_str;
   }
   return String();
+}
+
+void handle_uRcv(AsyncWebServerRequest *request)
+{
+  Serial.println("handle_uRcv");
+  tone(TONE_EXTCOM);
+  webpage = "NG";
+  int argNo = -1;
+  String retMsg;
+
+  String argStr = request->arg("No");
+  argNo = argStr.toInt();
+  if (argNo <= 0)
+  {
+    retMsg = "uRcv Error : No = " + argStr;
+    Serial.println(retMsg);
+    webpage = retMsg;
+    return;
+  }  
+  retMsg = "uRcv : No = " + String(argNo);
+
+  String getMsg;
+  String argMsg = request->arg("msg");
+  if (argMsg.length() > 0)
+  {
+    getMsg=argMsg;
+    Serial.println(getMsg);
+    retMsg += "\n Msg = " + getMsg;
+  }
+
+  Serial.println(retMsg);
+  webpage = retMsg;
+  return;
 }
 

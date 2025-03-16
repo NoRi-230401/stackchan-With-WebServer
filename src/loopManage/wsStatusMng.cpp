@@ -73,7 +73,7 @@ void SDU_disp()
   M5.Lcd.fillScreen(BLACK);
 
   M5.Lcd.print( "**  SD-Updater  **\n\n");
-  M5.Lcd.print( SWW_NAME.c_str());
+  M5.Lcd.print( SWS_NAME.c_str());
   M5.Lcd.print("\n\n\nBtnA: lobby screen appear\n\n");
   M5.Lcd.print("BtnB: load menu binary\n\n");
   M5.Lcd.print("BtnC: store BIN file to SD\n");

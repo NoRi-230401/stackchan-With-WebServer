@@ -431,7 +431,7 @@ void M5StackConfig02()
 void M5FileSystemBegin()
 {
   // --- init File System ----
-  isSPIFFS = 1; // 1 -> SPIFFS   0 -> SD
+  // isSPIFFS = 1; // 1 -> SPIFFS   0 -> SD
 
   // Serial.println("SPIFFS.begin Start ...");
   if (!SPIFFS.begin(true))

@@ -1,8 +1,7 @@
-// ----------------------------<wsServer.h>------------------------------------
-#ifndef _WS_SERVER_H
-#define _WS_SERVER_H
+// ----------------------------<fileApi.h>------------------------------------
+#ifndef _FILE_COM_H
+#define _FILE_COM_H
 // ---------------------------
-// #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <AsyncTCP.h>          
 #include <ESPAsyncWebServer.h> 
@@ -16,18 +15,22 @@
 #include <M5Unified.h>
 #include <WiFi.h>  
 
-extern const String FLS_NAME[];
-extern int isSPIFFS;
 extern String SdPath;
 extern void Home();
 extern String HTML_Header();
 extern String HTML_Footer();
-extern void Handle_chdir(String filename);
-extern void Handle_rmdir(String filename);
-extern void Handle_mkdir(AsyncWebServerRequest *request);
+extern AsyncWebServer server;
+typedef struct
+{
+  String filename;
+  String ftype;
+  String fsize;
+} fileinfo;
+extern fileinfo Filenames[]; // Enough for most purposes!
+extern String webpage, MessageLine;
 
 // -------------------------------------------------------
-void serverSetup1();
+void setupFileComHandler();
 void FilesList();
 void FilesDirList();
 void Dir(AsyncWebServerRequest *request);
@@ -45,7 +48,7 @@ void Page_Not_Found();
 void Display_System_Info();
 String ConvBinUnits(int bytes, int resolution);
 String EncryptionType(wifi_auth_mode_t encryptionType);
-bool StartMDNSservice(const char *Name);
+// bool StartMDNSservice(const char *Name);
 
 // -------------------------------------------------------
 

@@ -48,7 +48,7 @@ extern bool getJsonItem(String flName, String item, String &getData, DynamicJson
 using namespace m5avatar;
 extern Avatar avatar;
 extern String webpage;
-extern int isSPIFFS;
+// extern int isSPIFFS;
 extern uint8_t VOLUME_VALUE;
 
 #define TONE_MODE_INIT 4

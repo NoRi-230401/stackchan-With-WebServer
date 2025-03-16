@@ -1,5 +1,47 @@
 // ----------------------------<wsApi.cpp>------------------------------------
-#include "wsApi.h"
+#include "webApi.h"
+
+AsyncWebServer server(80);
+typedef struct
+{
+  String filename;
+  String ftype;
+  String fsize;
+} fileinfo;
+fileinfo Filenames[200]; // Enough for most purposes!
+String webpage, MessageLine;
+bool StartupErrors = false;
+
+void serverSetup()
+{
+  setupMDNS();
+  // ------------------- setup Handler -----------------
+  setupApiHandler();
+  setupFileComHandler();
+  setupSystemAppHandler();
+  setupUserAppHandler();
+  // ----------------------------------------------------
+  server.begin(); // Start the AsyncWebServer
+  if (!StartupErrors)
+    Serial.println("** AsyncWebServer started successfully... **");
+  else
+    Serial.println("** AsyncWebServer : There were problems starting all services... **");
+}
+
+void setupMDNS()
+{
+  esp_err_t err = mdns_init(); // Initialise mDNS service
+  if (err)
+  {
+    printf("MDNS Init failed: %d\n", err); // Return if error detected
+    StartupErrors = true;
+    return ;
+  }
+  mdns_hostname_set(SERVER_NAME.c_str()); // Set hostname
+  StartupErrors = false;
+  Serial.println("MDNS Started : ServerName = " + SERVER_NAME);
+  return;
+}
 
 void setupApiHandler()
 {

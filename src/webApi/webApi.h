@@ -1,7 +1,8 @@
 // ----------------------------<wsApi.h>------------------------------------
-#ifndef _WS_API_H
-#define _WS_API_H
+#ifndef _WEB_API_H
+#define _WEB_API_H
 // ---------------------------
+#include <Arduino.h>
 #include <Avatar.h>
 #include <ArduinoJson.h>
 #include <SD.h>
@@ -154,6 +155,37 @@ extern void serverSend(AsyncWebServerRequest *request);
 extern void serverSend3(AsyncWebServerRequest *request);
 
 // ---------------------------------------------------------
+
+extern String SERVER_NAME;
+extern void Home();
+extern String HTML_Header();
+extern String HTML_Footer();
+extern AsyncWebServer server;
+extern String ConvBinUnits(int bytes, int resolution);
+
+// extern String webpage;
+// typedef struct
+// {
+//   String filename;
+//   String ftype;
+//   String fsize;
+// } fileinfo;
+// extern fileinfo Filenames[]; // Enough for most purposes!
+
+
+extern void setupApiHandler();
+extern void setupSystemAppHandler();
+extern void setupUserAppHandler();
+extern void setupMDNS();
+extern void setupFileComHandler();
+extern bool StartMDNSservice(const char *Name);
+extern void FilesDirList();
+
+
+void setupMDNS();
+void serverSetup();
+// void serverSetup2();
+void FilesDirList();
 
 void setupApiHandler();
 void handle_button(AsyncWebServerRequest *request);
